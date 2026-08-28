@@ -79,7 +79,7 @@ export const opportunities: Opportunity[] = [
     deadline: 'Rolling',
     funding: 'Free',
     description:
-      'A free introductory course covering essential cyber-security concepts, including online threats, malware, network security and identity theft. The course is listed among OpenLearn’s free badged courses.',
+      'A free introductory course covering essential cyber-security concepts, including online threats, malware, network security and identity theft.',
     lastVerified: '2026-08-29',
     status: 'Verified',
     tags: ['Cybersecurity', 'Computing', 'Technology', 'Free'],
@@ -181,7 +181,7 @@ export const opportunities: Opportunity[] = [
     deadline: 'Rolling',
     funding: 'Free',
     description:
-      'A free OpenLearn course focused on teamwork, different roles within teams and developing confidence in collaborative work. It is one of the platform’s free badged courses.',
+      'A free OpenLearn course focused on teamwork, different roles within teams and developing confidence in collaborative work.',
     lastVerified: '2026-08-29',
     status: 'Verified',
     tags: ['Teamwork', 'Leadership', 'Career Skills', 'Free'],
