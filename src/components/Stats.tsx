@@ -15,7 +15,7 @@ export function Stats() {
                 <p className="mt-1.5 text-sm text-ink-300">{stat.label}</p>
                 {stat.placeholder && (
                   <p className="mt-1 text-[10px] uppercase tracking-wider text-ink-500">
-                    Placeholder
+                    
                   </p>
                 )}
               </div>
