@@ -1,8 +1,55 @@
 import { useState } from 'react';
-import { Send, CheckCircle2 } from 'lucide-react';
+import { Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+
+const FORMSPREE_URL = 'https://formspree.io/f/mvkooyry';
 
 export function SubmitOpportunity() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setSubmitting(true);
+    setError('');
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        form.reset();
+      } else {
+        const data = await response.json().catch(() => null);
+
+        if (data?.errors) {
+          setError(
+            data.errors.map((item: { message: string }) => item.message).join(', ')
+          );
+        } else {
+          setError(
+            'Something went wrong while submitting. Please try again.'
+          );
+        }
+      }
+    } catch {
+      setError(
+        'Unable to connect to the submission service. Please check your internet connection and try again.'
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   if (submitted) {
     return (
@@ -21,6 +68,17 @@ export function SubmitOpportunity() {
             Thank you! We’ll review the opportunity before adding it to
             Mission Khoj.
           </p>
+
+          <button
+            type="button"
+            onClick={() => {
+              setSubmitted(false);
+              setError('');
+            }}
+            className="mt-6 rounded-xl border border-white/10 px-5 py-2.5 text-sm text-ink-100 transition hover:border-gold-500/40 hover:text-gold-300"
+          >
+            Submit Another
+          </button>
         </div>
       </section>
     );
@@ -45,12 +103,9 @@ export function SubmitOpportunity() {
       </div>
 
       <form
-        action="https://formspree.io/f/mvkooyry"
-        method="POST"
-        onSubmit={() => setSubmitted(true)}
+        onSubmit={handleSubmit}
         className="space-y-5 rounded-2xl border border-white/[0.06] bg-ink-850/60 p-5 sm:p-7"
       >
-        {/* Name + Email */}
         <div className="grid gap-5 sm:grid-cols-2">
           <Field
             label="Your Name"
@@ -68,7 +123,6 @@ export function SubmitOpportunity() {
           />
         </div>
 
-        {/* Opportunity */}
         <Field
           label="Opportunity Name"
           name="opportunity_name"
@@ -76,7 +130,6 @@ export function SubmitOpportunity() {
           required
         />
 
-        {/* Organization */}
         <Field
           label="Organization"
           name="organization"
@@ -84,7 +137,6 @@ export function SubmitOpportunity() {
           required
         />
 
-        {/* Website + Deadline */}
         <div className="grid gap-5 sm:grid-cols-2">
           <Field
             label="Official Website"
@@ -102,7 +154,6 @@ export function SubmitOpportunity() {
           />
         </div>
 
-        {/* Eligibility + Location */}
         <div className="grid gap-5 sm:grid-cols-2">
           <Field
             label="Eligibility"
@@ -119,7 +170,6 @@ export function SubmitOpportunity() {
           />
         </div>
 
-        {/* Category */}
         <div>
           <label
             htmlFor="category"
@@ -147,7 +197,6 @@ export function SubmitOpportunity() {
           </select>
         </div>
 
-        {/* Funding */}
         <div>
           <label
             htmlFor="funding"
@@ -175,7 +224,6 @@ export function SubmitOpportunity() {
           </select>
         </div>
 
-        {/* Description */}
         <div>
           <label
             htmlFor="description"
@@ -194,7 +242,6 @@ export function SubmitOpportunity() {
           />
         </div>
 
-        {/* Additional Information */}
         <div>
           <label
             htmlFor="additional_info"
@@ -212,13 +259,29 @@ export function SubmitOpportunity() {
           />
         </div>
 
-        {/* Submit */}
+        {error && (
+          <div className="flex items-start gap-2 rounded-xl border border-red-500/20 bg-red-500/[0.06] p-3 text-sm text-red-300">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
         <button
           type="submit"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gold-500 px-5 py-3 text-sm font-semibold text-ink-950 transition hover:bg-gold-400"
+          disabled={submitting}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gold-500 px-5 py-3 text-sm font-semibold text-ink-950 transition hover:bg-gold-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          <Send className="h-4 w-4" />
-          Submit Opportunity
+          {submitting ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Submitting...
+            </>
+          ) : (
+            <>
+              <Send className="h-4 w-4" />
+              Submit Opportunity
+            </>
+          )}
         </button>
 
         <p className="text-center text-xs text-ink-500">
