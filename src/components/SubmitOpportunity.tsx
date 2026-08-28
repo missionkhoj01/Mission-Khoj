@@ -6,7 +6,10 @@ export function SubmitOpportunity() {
 
   if (submitted) {
     return (
-      <section id="submit" className="mx-auto max-w-3xl px-5 py-20 sm:px-8">
+      <section
+        id="submit"
+        className="mx-auto max-w-3xl px-5 py-20 sm:px-8"
+      >
         <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.06] p-8 text-center">
           <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-400" />
 
@@ -15,7 +18,8 @@ export function SubmitOpportunity() {
           </h2>
 
           <p className="mt-2 text-sm text-ink-300">
-            Thank you! We’ll review the opportunity before adding it to Mission Khoj.
+            Thank you! We’ll review the opportunity before adding it to
+            Mission Khoj.
           </p>
         </div>
       </section>
@@ -23,7 +27,10 @@ export function SubmitOpportunity() {
   }
 
   return (
-    <section id="submit" className="mx-auto max-w-4xl px-5 py-20 sm:px-8">
+    <section
+      id="submit"
+      className="mx-auto max-w-4xl px-5 py-20 sm:px-8"
+    >
       <div className="mb-8">
         <p className="eyebrow">Help Us Grow</p>
 
@@ -43,6 +50,7 @@ export function SubmitOpportunity() {
         onSubmit={() => setSubmitted(true)}
         className="space-y-5 rounded-2xl border border-white/[0.06] bg-ink-850/60 p-5 sm:p-7"
       >
+        {/* Name + Email */}
         <div className="grid gap-5 sm:grid-cols-2">
           <Field
             label="Your Name"
@@ -60,6 +68,7 @@ export function SubmitOpportunity() {
           />
         </div>
 
+        {/* Opportunity */}
         <Field
           label="Opportunity Name"
           name="opportunity_name"
@@ -67,6 +76,7 @@ export function SubmitOpportunity() {
           required
         />
 
+        {/* Organization */}
         <Field
           label="Organization"
           name="organization"
@@ -74,6 +84,7 @@ export function SubmitOpportunity() {
           required
         />
 
+        {/* Website + Deadline */}
         <div className="grid gap-5 sm:grid-cols-2">
           <Field
             label="Official Website"
@@ -86,12 +97,12 @@ export function SubmitOpportunity() {
           <Field
             label="Deadline"
             name="deadline"
-            type="text"
             placeholder="e.g. September 15, 2026 / Rolling"
             required
           />
         </div>
 
+        {/* Eligibility + Location */}
         <div className="grid gap-5 sm:grid-cols-2">
           <Field
             label="Eligibility"
@@ -108,6 +119,7 @@ export function SubmitOpportunity() {
           />
         </div>
 
+        {/* Category */}
         <div>
           <label
             htmlFor="category"
@@ -120,9 +132,12 @@ export function SubmitOpportunity() {
             id="category"
             name="category"
             required
+            defaultValue=""
             className="w-full rounded-xl border border-white/[0.08] bg-ink-900 px-3 py-2.5 text-sm text-white outline-none transition focus:border-gold-500/50"
           >
-            <option value="">Select a category</option>
+            <option value="" disabled>
+              Select a category
+            </option>
             <option value="scholarships">Scholarship</option>
             <option value="competitions">Competition</option>
             <option value="research">Research</option>
@@ -132,6 +147,7 @@ export function SubmitOpportunity() {
           </select>
         </div>
 
+        {/* Funding */}
         <div>
           <label
             htmlFor="funding"
@@ -144,9 +160,12 @@ export function SubmitOpportunity() {
             id="funding"
             name="funding"
             required
+            defaultValue=""
             className="w-full rounded-xl border border-white/[0.08] bg-ink-900 px-3 py-2.5 text-sm text-white outline-none transition focus:border-gold-500/50"
           >
-            <option value="">Select funding type</option>
+            <option value="" disabled>
+              Select funding type
+            </option>
             <option value="Free">Free</option>
             <option value="Fully Funded">Fully Funded</option>
             <option value="Partially Funded">Partially Funded</option>
@@ -156,6 +175,7 @@ export function SubmitOpportunity() {
           </select>
         </div>
 
+        {/* Description */}
         <div>
           <label
             htmlFor="description"
@@ -174,6 +194,7 @@ export function SubmitOpportunity() {
           />
         </div>
 
+        {/* Additional Information */}
         <div>
           <label
             htmlFor="additional_info"
@@ -191,6 +212,7 @@ export function SubmitOpportunity() {
           />
         </div>
 
+        {/* Submit */}
         <button
           type="submit"
           className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gold-500 px-5 py-3 text-sm font-semibold text-ink-950 transition hover:bg-gold-400"
