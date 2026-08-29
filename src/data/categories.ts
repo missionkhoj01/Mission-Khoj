@@ -1,4 +1,5 @@
 import type { Category } from '@/types';
+import { opportunities } from '@/data/opportunities';
 
 export const categories: Category[] = [
   {
@@ -8,7 +9,6 @@ export const categories: Category[] = [
     icon: 'GraduationCap',
     count: 0,
   },
-
   {
     id: 'exams',
     name: 'Exams',
@@ -16,7 +16,6 @@ export const categories: Category[] = [
     icon: 'FileText',
     count: 0,
   },
-
   {
     id: 'colleges',
     name: 'Colleges',
@@ -24,7 +23,6 @@ export const categories: Category[] = [
     icon: 'University',
     count: 0,
   },
-
   {
     id: 'competitions',
     name: 'Competitions',
@@ -33,7 +31,6 @@ export const categories: Category[] = [
     icon: 'Trophy',
     count: 0,
   },
-
   {
     id: 'olympiads',
     name: 'Olympiads',
@@ -42,7 +39,6 @@ export const categories: Category[] = [
     icon: 'Medal',
     count: 0,
   },
-
   {
     id: 'fellowships',
     name: 'Fellowships',
@@ -51,7 +47,6 @@ export const categories: Category[] = [
     icon: 'Award',
     count: 0,
   },
-
   {
     id: 'internships',
     name: 'Internships',
@@ -60,7 +55,6 @@ export const categories: Category[] = [
     icon: 'BriefcaseBusiness',
     count: 0,
   },
-
   {
     id: 'research',
     name: 'Research',
@@ -69,7 +63,6 @@ export const categories: Category[] = [
     icon: 'FlaskConical',
     count: 0,
   },
-
   {
     id: 'summer-programs',
     name: 'Summer Programs',
@@ -78,7 +71,6 @@ export const categories: Category[] = [
     icon: 'Sun',
     count: 0,
   },
-
   {
     id: 'courses',
     name: 'Courses',
@@ -87,7 +79,6 @@ export const categories: Category[] = [
     icon: 'BookOpen',
     count: 0,
   },
-
   {
     id: 'mentorships',
     name: 'Mentorship',
@@ -96,7 +87,6 @@ export const categories: Category[] = [
     icon: 'Users',
     count: 0,
   },
-
   {
     id: 'volunteering',
     name: 'Volunteering',
@@ -105,7 +95,6 @@ export const categories: Category[] = [
     icon: 'HeartHandshake',
     count: 0,
   },
-
   {
     id: 'grants',
     name: 'Grants',
@@ -114,7 +103,6 @@ export const categories: Category[] = [
     icon: 'Banknote',
     count: 0,
   },
-
   {
     id: 'learning',
     name: 'Free Learning',
@@ -123,7 +111,6 @@ export const categories: Category[] = [
     icon: 'BookOpen',
     count: 0,
   },
-
   {
     id: 'international',
     name: 'International',
@@ -132,7 +119,6 @@ export const categories: Category[] = [
     icon: 'Globe2',
     count: 0,
   },
-
   {
     id: 'other',
     name: 'Other Opportunities',
@@ -142,3 +128,16 @@ export const categories: Category[] = [
     count: 0,
   },
 ];
+
+/*
+ * Automatically calculate the number of opportunities
+ * inside every category.
+ */
+export const categoriesWithCounts: Category[] = categories.map((category) => ({
+  ...category,
+  count: opportunities.filter(
+    (opportunity) =>
+      opportunity.category === category.id &&
+      opportunity.status !== 'Expired'
+  ).length,
+}));
