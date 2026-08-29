@@ -1,7 +1,17 @@
 export type CategoryId =
   | 'scholarships'
+  | 'exams'
+  | 'colleges'
   | 'competitions'
+  | 'olympiads'
+  | 'fellowships'
+  | 'internships'
   | 'research'
+  | 'summer-programs'
+  | 'courses'
+  | 'mentorships'
+  | 'volunteering'
+  | 'grants'
   | 'learning'
   | 'international'
   | 'other';
@@ -14,23 +24,75 @@ export type FundingType =
   | 'Stipend'
   | 'Self-Funded';
 
-export type OppStatus = 'Verified' | 'Needs Review' | 'Expired';
+export type OppStatus =
+  | 'Verified'
+  | 'Needs Review'
+  | 'Expired';
 
 export interface Opportunity {
   id: string;
   name: string;
   organization: string;
+
   category: CategoryId;
+
   country: string;
+
   eligibility: string;
+
   deadline: string;
+
   funding: FundingType;
+
   description: string;
+
   sourceUrl?: string;
+
   lastVerified: string;
+
   status: OppStatus;
+
   tags: string[];
+
   featured?: boolean;
+
+  /* Additional opportunity information */
+
+  type?: string;
+
+  subcategory?: string;
+
+  ageRange?: string;
+
+  grades?: string[];
+
+  subjects?: string[];
+
+  location?: string;
+
+  mode?: 'Online' | 'Offline' | 'Hybrid' | 'Online / Global';
+
+  fee?: string;
+
+  award?: string;
+
+  duration?: string;
+
+  applicationUrl?: string;
+
+  officialWebsite?: string;
+
+  providerType?:
+    | 'Government'
+    | 'University'
+    | 'Company'
+    | 'Foundation'
+    | 'NGO'
+    | 'School'
+    | 'International Organization'
+    | 'Other';
+
+  IndiaEligible?: boolean;
 }
 
 export interface Category {
