@@ -1,31 +1,63 @@
 export const siteConfig = {
   name: 'Mission Khoj',
   hindiName: 'मिशन खोज',
+
   tagline: "Discover What's Possible.",
+
   description:
-    'We help students discover scholarships, competitions, research programs, learning opportunities and more — opportunities that often exist beyond the classroom.',
+    'Mission Khoj helps students discover scholarships, exams, colleges, competitions, olympiads, fellowships, internships, research programs, summer programs, courses, mentorships, volunteering, grants and international opportunities — all in one place.',
+
   email: 'hello@missionkhoj.org',
 
   instagramHandle: '@mission_khoj',
-  instagramUrl: 'https://www.instagram.com/mission_khoj/',
-  instagramFollowUrl: 'https://www.instagram.com/mission_khoj/',
+
+  instagramUrl:
+    'https://www.instagram.com/mission_khoj/',
+
+  instagramFollowUrl:
+    'https://www.instagram.com/mission_khoj/',
 
   foundedYear: 2026,
 
-  stats: [
-    { label: 'Opportunities discovered', value: '500+', placeholder: false },
-    { label: 'Students helped', value: '50+', placeholder: false },
-    { label: 'Categories', value: '10+', placeholder: false },
-    { label: 'Free', value: '100%', placeholder: false },
-  ],
+  /*
+   * Stats are calculated dynamically from
+   * src/data/opportunities.ts
+   *
+   * Do NOT put fixed opportunity numbers here.
+   */
+
+  stats: [],
 
   nav: [
-    { label: 'Opportunities', href: '#opportunities' },
-    { label: 'Opportunity Finder', href: '#finder' },
-    { label: 'Ask Khoj', href: '#ask' },
-    { label: 'Guides', href: '#guides' },
-    { label: 'Stories', href: '#stories' },
-    { label: 'About', href: '#about' },
+    {
+      label: 'Opportunities',
+      href: '#opportunities',
+    },
+
+    {
+      label: 'Opportunity Finder',
+      href: '#finder',
+    },
+
+    {
+      label: 'Ask Khoj',
+      href: '#ask',
+    },
+
+    {
+      label: 'Guides',
+      href: '#guides',
+    },
+
+    {
+      label: 'Stories',
+      href: '#stories',
+    },
+
+    {
+      label: 'About',
+      href: '#about',
+    },
   ],
 };
 
