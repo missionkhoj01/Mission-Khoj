@@ -10,8 +10,10 @@ import {
   BookOpen,
   Globe2,
   Building2,
-  Layers3,
   Users,
+  IndianRupee,
+  Timer,
+  Award,
 } from 'lucide-react';
 
 import type { Opportunity } from '@/types';
@@ -32,7 +34,13 @@ function formatDate(value: string): string {
 }
 
 function daysUntil(value: string): number | null {
-  if (value === 'Rolling') return null;
+  if (
+    value === 'Rolling' ||
+    value === 'To be announced' ||
+    value === 'TBA'
+  ) {
+    return null;
+  }
 
   const d = new Date(value);
 
@@ -77,34 +85,29 @@ export function OpportunityCard({
         ? 'text-gold-300'
         : 'text-ink-100';
 
-  const handleView = () => {
-    if (!opportunity.sourceUrl) return;
+  const websiteUrl =
+    opportunity.officialWebsite ||
+    opportunity.sourceUrl;
 
-    window.open(
-      opportunity.sourceUrl,
-      '_blank',
-      'noopener,noreferrer'
-    );
-  };
+  const applyUrl =
+    opportunity.applicationUrl ||
+    opportunity.sourceUrl;
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-ink-850/60 p-5 transition-all duration-500 hover:-translate-y-1 hover:border-gold-500/25 hover:bg-ink-800/60 sm:p-6">
 
-      {/* Featured indicator */}
+      {/* Featured */}
       {opportunity.featured && (
         <div className="absolute right-0 top-0 rounded-bl-xl border-b border-l border-gold-500/20 bg-gold-500/10 px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-gold-300">
           Featured
         </div>
       )}
 
-      {/* Category + funding */}
+      {/* Category + Funding */}
       <div className="flex items-start justify-between gap-3 pr-1">
-
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="text-xs font-medium uppercase tracking-wider text-gold-400/70">
-            {category?.name ?? opportunity.category}
-          </span>
-        </div>
+        <span className="text-xs font-medium uppercase tracking-wider text-gold-400/70">
+          {category?.name ?? opportunity.category}
+        </span>
 
         <span
           className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${fundingTone}`}
@@ -131,12 +134,14 @@ export function OpportunityCard({
         </p>
       )}
 
-      {/* Opportunity type */}
-      {opportunity.type && (
-        <div className="mt-4 flex items-center gap-2">
-          <span className="rounded-md border border-white/[0.08] bg-white/[0.03] px-2 py-1 text-[11px] text-ink-200">
-            {opportunity.type}
-          </span>
+      {/* Type */}
+      {(opportunity.type || opportunity.subcategory) && (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {opportunity.type && (
+            <span className="rounded-md border border-white/[0.08] bg-white/[0.03] px-2 py-1 text-[11px] text-ink-200">
+              {opportunity.type}
+            </span>
+          )}
 
           {opportunity.subcategory && (
             <span className="rounded-md border border-white/[0.08] bg-white/[0.03] px-2 py-1 text-[11px] text-ink-300">
@@ -186,9 +191,13 @@ export function OpportunityCard({
 
       {/* Additional information */}
       {(opportunity.grades?.length ||
+        opportunity.ageRange ||
         opportunity.subjects?.length ||
         opportunity.mode ||
-        opportunity.providerType) && (
+        opportunity.providerType ||
+        opportunity.duration ||
+        opportunity.fee ||
+        opportunity.award) && (
         <div className="mt-4 space-y-2 border-t border-white/[0.06] pt-4">
 
           {/* Grades */}
@@ -221,6 +230,18 @@ export function OpportunityCard({
               </InfoRow>
             )}
 
+          {/* Age */}
+          {opportunity.ageRange && (
+            <InfoRow
+              icon={
+                <Users className="h-3.5 w-3.5" />
+              }
+              label="Age"
+            >
+              <span>{opportunity.ageRange}</span>
+            </InfoRow>
+          )}
+
           {/* Subjects */}
           {opportunity.subjects &&
             opportunity.subjects.length > 0 && (
@@ -230,7 +251,7 @@ export function OpportunityCard({
                 }
                 label="Subjects"
               >
-                <span className="line-clamp-1">
+                <span className="line-clamp-2">
                   {opportunity.subjects.join(', ')}
                 </span>
               </InfoRow>
@@ -248,18 +269,55 @@ export function OpportunityCard({
             </InfoRow>
           )}
 
+          {/* Duration */}
+          {opportunity.duration && (
+            <InfoRow
+              icon={
+                <Timer className="h-3.5 w-3.5" />
+              }
+              label="Duration"
+            >
+              <span>{opportunity.duration}</span>
+            </InfoRow>
+          )}
+
+          {/* Fee */}
+          {opportunity.fee && (
+            <InfoRow
+              icon={
+                <IndianRupee className="h-3.5 w-3.5" />
+              }
+              label="Fee"
+            >
+              <span>{opportunity.fee}</span>
+            </InfoRow>
+          )}
+
+          {/* Award */}
+          {opportunity.award && (
+            <InfoRow
+              icon={
+                <Award className="h-3.5 w-3.5" />
+              }
+              label="Award"
+            >
+              <span className="line-clamp-2">
+                {opportunity.award}
+              </span>
+            </InfoRow>
+          )}
+
           {/* Provider */}
           {opportunity.providerType && (
             <InfoRow
               icon={
-                <Users className="h-3.5 w-3.5" />
+                <Building2 className="h-3.5 w-3.5" />
               }
               label="Provider"
             >
               <span>{opportunity.providerType}</span>
             </InfoRow>
           )}
-
         </div>
       )}
 
@@ -304,11 +362,19 @@ export function OpportunityCard({
         </p>
       )}
 
-      {/* Rolling deadline */}
+      {/* Rolling / TBA */}
       {opportunity.deadline === 'Rolling' && (
         <p className="mt-4 text-[11px] text-ink-400">
           <Clock className="mr-1 inline h-3 w-3" />
           Applications accepted on a rolling basis
+        </p>
+      )}
+
+      {(opportunity.deadline === 'To be announced' ||
+        opportunity.deadline === 'TBA') && (
+        <p className="mt-4 text-[11px] text-ink-400">
+          <Clock className="mr-1 inline h-3 w-3" />
+          Deadline to be announced
         </p>
       )}
 
@@ -335,36 +401,36 @@ export function OpportunityCard({
               India eligible
             </span>
           )}
-
         </div>
 
         {/* Buttons */}
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
 
-          {/* Official Source */}
-          {opportunity.sourceUrl && (
+          {/* Official Website */}
+          {websiteUrl && (
             <a
-              href={opportunity.sourceUrl}
+              href={websiteUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-3 py-1.5 text-xs text-ink-100 transition-colors hover:border-gold-500/40 hover:text-gold-300"
             >
               <ExternalLink className="h-3.5 w-3.5" />
-              Official Source
+              Website
             </a>
           )}
 
-          {/* View */}
-          <button
-            type="button"
-            onClick={handleView}
-            disabled={!opportunity.sourceUrl}
-            className="group/btn inline-flex items-center gap-1 rounded-lg bg-white/[0.04] px-3 py-1.5 text-xs text-ink-100 transition-colors hover:bg-gold-500 hover:text-ink-950 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white/[0.04] disabled:hover:text-ink-100"
-          >
-            View
-
-            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5" />
-          </button>
+          {/* Apply */}
+          {applyUrl && (
+            <a
+              href={applyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group/btn inline-flex items-center gap-1 rounded-lg bg-gold-500 px-3 py-1.5 text-xs font-medium text-ink-950 transition-colors hover:bg-gold-400"
+            >
+              Apply
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5" />
+            </a>
+          )}
 
         </div>
       </div>
