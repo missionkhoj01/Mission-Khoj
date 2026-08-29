@@ -1,929 +1,286 @@
 import type { Opportunity } from '@/types';
 
-export const opportunities: Opportunity[] = [
-  /* =========================================================
-     SCHOLARSHIPS
-  ========================================================= */
+/**
+ * Mission Khoj — curated discovery dataset
+ * 100 India-focused + 100 international opportunities.
+ *
+ * Important:
+ * - Annual deadlines are intentionally kept as "To be announced" unless
+ *   the exact current cycle has been verified.
+ * - "Needs Review" means the opportunity is included for discovery but
+ *   the current cycle details should be checked on the official website.
+ * - Always follow the official source for final eligibility and deadlines.
+ */
 
-  {
-    id: 'national-scholarship-portal',
-    name: 'National Scholarship Portal',
-    organization: 'Government of India',
-    category: 'scholarships',
-    country: 'India',
-    location: 'India',
-    eligibility:
-      'Indian students who meet the eligibility requirements of individual scholarship schemes.',
-    deadline: 'To be announced',
-    funding: 'Fully Funded',
-    description:
-      'Official Government of India platform bringing together multiple scholarship schemes for eligible students.',
-    sourceUrl: 'https://scholarships.gov.in/',
-    officialWebsite: 'https://scholarships.gov.in/',
-    applicationUrl: 'https://scholarships.gov.in/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['government', 'india', 'scholarship', 'financial-aid'],
-    featured: true,
-    type: 'Scholarship Portal',
-    subcategory: 'Government Scholarships',
-    grades: [
-      'Grade 8',
-      'Grade 9',
-      'Grade 10',
-      'Grade 11',
-      'Grade 12',
-      'Undergraduate',
-      'Postgraduate',
-    ],
-    subjects: ['All Subjects'],
-    mode: 'Online',
-    providerType: 'Government',
-    IndiaEligible: true,
-  },
+const today = '2026-08-29';
 
-  {
-    id: 'inspire-scholarship',
-    name: 'INSPIRE Scholarship for Higher Education',
-    organization: 'Department of Science & Technology',
-    category: 'scholarships',
-    country: 'India',
-    location: 'India',
-    eligibility:
-      'Students meeting the current INSPIRE eligibility requirements and pursuing eligible science courses.',
-    deadline: 'To be announced',
-    funding: 'Stipend',
-    description:
-      'Government scholarship support for students pursuing higher education in basic and natural sciences.',
-    sourceUrl: 'https://online-inspire.gov.in/',
-    officialWebsite: 'https://online-inspire.gov.in/',
-    applicationUrl: 'https://online-inspire.gov.in/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['inspire', 'science', 'government', 'scholarship'],
-    type: 'Scholarship',
-    subcategory: 'Science Scholarship',
-    grades: ['Grade 12', 'Undergraduate'],
-    subjects: [
-      'Physics',
-      'Chemistry',
-      'Mathematics',
-      'Biology',
-      'Natural Sciences',
-    ],
-    mode: 'Online',
-    providerType: 'Government',
-    IndiaEligible: true,
-  },
+type Seed = {
+  name: string;
+  organization: string;
+  category: Opportunity['category'];
+  country: string;
+  url: string;
+  funding: Opportunity['funding'];
+  type: string;
+  subcategory: string;
+  IndiaEligible: boolean;
+};
 
-  {
-    id: 'reliance-foundation-undergraduate',
-    name: 'Reliance Foundation Undergraduate Scholarships',
-    organization: 'Reliance Foundation',
-    category: 'scholarships',
-    country: 'India',
-    location: 'India',
-    eligibility:
-      'Indian undergraduate students meeting the scholarship cycle requirements.',
-    deadline: 'To be announced',
-    funding: 'Fully Funded',
-    description:
-      'Undergraduate scholarship supporting students across India with financial assistance and development opportunities.',
-    sourceUrl: 'https://www.scholarships.reliancefoundation.org/',
-    officialWebsite: 'https://www.scholarships.reliancefoundation.org/',
-    applicationUrl: 'https://www.scholarships.reliancefoundation.org/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['reliance', 'undergraduate', 'scholarship', 'india'],
-    featured: true,
-    type: 'Scholarship',
-    subcategory: 'Undergraduate',
-    grades: ['Undergraduate'],
-    subjects: ['All Subjects'],
-    mode: 'Online',
-    providerType: 'Foundation',
-    IndiaEligible: true,
-  },
+const make = (s: Seed, index: number): Opportunity => ({
+  id: `${s.country.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${index + 1}-${s.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'')}`,
+  name: s.name,
+  organization: s.organization,
+  category: s.category,
+  country: s.country,
+  location: s.country === 'India' ? 'India' : 'Global',
+  eligibility: s.country === 'India'
+    ? 'Indian students; exact eligibility varies by program and current cycle.'
+    : 'International students where permitted; nationality and program-specific eligibility varies.',
+  deadline: 'To be announced',
+  funding: s.funding,
+  description: s.country === 'India'
+    ? 'India-focused opportunity for students and learners. Review the official source for the current cycle, eligibility, deadlines, fees and application instructions.'
+    : 'International opportunity for students and learners. Review the official source for the current cycle, eligibility, deadlines, fees and application instructions.',
+  sourceUrl: s.url,
+  officialWebsite: s.url,
+  lastVerified: today,
+  status: 'Needs Review',
+  tags: [
+    s.category,
+    s.country === 'India' ? 'india' : 'international',
+    'students',
+  ],
+  featured: index < 10,
+  type: s.type,
+  subcategory: s.subcategory,
+  grades: ['Grade 9', 'Grade 10', 'Grade 11', 'Grade 12', 'Undergraduate'],
+  subjects: ['Multiple Subjects'],
+  mode: 'Online / Global',
+  providerType: 'Other',
+  IndiaEligible: s.IndiaEligible,
+});
 
-  /* =========================================================
-     EXAMS
-  ========================================================= */
+const indianSeeds: Seed[] = [
 
-  {
-    id: 'jee-main',
-    name: 'JEE Main',
-    organization: 'National Testing Agency',
-    category: 'exams',
-    country: 'India',
-    location: 'India',
-    eligibility:
-      'Students meeting the current JEE Main eligibility and qualification requirements.',
-    deadline: 'To be announced',
-    funding: 'Paid',
-    description:
-      'National engineering entrance examination used for admission to participating institutions and as a pathway to JEE Advanced.',
-    sourceUrl: 'https://jeemain.nta.nic.in/',
-    officialWebsite: 'https://jeemain.nta.nic.in/',
-    applicationUrl: 'https://jeemain.nta.nic.in/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['jee', 'engineering', 'entrance-exam', 'india'],
-    featured: true,
-    type: 'Entrance Exam',
-    subcategory: 'Engineering',
-    grades: ['Grade 12'],
-    subjects: ['Physics', 'Chemistry', 'Mathematics'],
-    mode: 'Online',
-    providerType: 'Government',
-    IndiaEligible: true,
-  },
-
-  {
-    id: 'neet-ug',
-    name: 'NEET (UG)',
-    organization: 'National Testing Agency',
-    category: 'exams',
-    country: 'India',
-    location: 'India',
-    eligibility:
-      'Students meeting the current undergraduate medical entrance requirements.',
-    deadline: 'To be announced',
-    funding: 'Paid',
-    description:
-      'National entrance examination for undergraduate medical education in India.',
-    sourceUrl: 'https://neet.nta.nic.in/',
-    officialWebsite: 'https://neet.nta.nic.in/',
-    applicationUrl: 'https://neet.nta.nic.in/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['neet', 'medical', 'medicine', 'entrance-exam'],
-    featured: true,
-    type: 'Entrance Exam',
-    subcategory: 'Medical',
-    grades: ['Grade 12'],
-    subjects: ['Physics', 'Chemistry', 'Biology'],
-    mode: 'Online',
-    providerType: 'Government',
-    IndiaEligible: true,
-  },
-
-  {
-    id: 'cuet-ug',
-    name: 'CUET (UG)',
-    organization: 'National Testing Agency',
-    category: 'exams',
-    country: 'India',
-    location: 'India',
-    eligibility:
-      'Students meeting the current CUET undergraduate requirements.',
-    deadline: 'To be announced',
-    funding: 'Paid',
-    description:
-      'Common University Entrance Test used by participating institutions for undergraduate admissions.',
-    sourceUrl: 'https://cuet.nta.nic.in/',
-    officialWebsite: 'https://cuet.nta.nic.in/',
-    applicationUrl: 'https://cuet.nta.nic.in/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['cuet', 'university', 'admission', 'entrance-exam'],
-    type: 'Entrance Exam',
-    subcategory: 'University Admission',
-    grades: ['Grade 12'],
-    subjects: ['Multiple Subjects'],
-    mode: 'Online',
-    providerType: 'Government',
-    IndiaEligible: true,
-  },
-
-  {
-    id: 'jee-advanced',
-    name: 'JEE Advanced',
-    organization: 'IITs',
-    category: 'exams',
-    country: 'India',
-    location: 'India',
-    eligibility:
-      'Candidates meeting the current JEE Advanced qualification and eligibility criteria.',
-    deadline: 'To be announced',
-    funding: 'Paid',
-    description:
-      'Advanced engineering entrance examination used for admission to undergraduate programs at the Indian Institutes of Technology.',
-    sourceUrl: 'https://jeeadv.ac.in/',
-    officialWebsite: 'https://jeeadv.ac.in/',
-    applicationUrl: 'https://jeeadv.ac.in/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['jee', 'iit', 'engineering', 'entrance-exam'],
-    featured: true,
-    type: 'Entrance Exam',
-    subcategory: 'Engineering',
-    grades: ['Grade 12'],
-    subjects: ['Physics', 'Chemistry', 'Mathematics'],
-    mode: 'Online',
-    providerType: 'Government',
-    IndiaEligible: true,
-  },
-
-  {
-    id: 'clat',
-    name: 'Common Law Admission Test (CLAT)',
-    organization: 'Consortium of National Law Universities',
-    category: 'exams',
-    country: 'India',
-    location: 'India',
-    eligibility:
-      'Students meeting the current undergraduate CLAT eligibility requirements.',
-    deadline: 'To be announced',
-    funding: 'Paid',
-    description:
-      'National-level law entrance examination for participating National Law Universities.',
-    sourceUrl: 'https://consortiumofnlus.ac.in/',
-    officialWebsite: 'https://consortiumofnlus.ac.in/',
-    applicationUrl: 'https://consortiumofnlus.ac.in/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['clat', 'law', 'entrance-exam', 'nlus'],
-    type: 'Entrance Exam',
-    subcategory: 'Law',
-    grades: ['Grade 12'],
-    subjects: ['English', 'Legal Reasoning', 'Logical Reasoning'],
-    mode: 'Online',
-    providerType: 'University',
-    IndiaEligible: true,
-  },
-
-  {
-    id: 'sat',
-    name: 'SAT',
-    organization: 'College Board',
-    category: 'exams',
-    country: 'International',
-    location: 'Global',
-    eligibility:
-      'Students applying to institutions that accept SAT scores.',
-    deadline: 'Rolling',
-    funding: 'Paid',
-    description:
-      'Standardized college admissions test accepted by universities in many countries.',
-    sourceUrl: 'https://satsuite.collegeboard.org/sat',
-    officialWebsite: 'https://satsuite.collegeboard.org/sat',
-    applicationUrl: 'https://satsuite.collegeboard.org/sat',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['sat', 'college-admissions', 'international'],
-    type: 'Standardized Test',
-    subcategory: 'University Admission',
-    grades: ['Grade 11', 'Grade 12'],
-    subjects: ['Mathematics', 'Reading', 'Writing'],
-    mode: 'Online / Global',
-    providerType: 'Other',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     COLLEGES
-  ========================================================= */
-
-  {
-    id: 'iit-undergraduate-admissions',
-    name: 'IIT Undergraduate Admissions',
-    organization: 'Indian Institutes of Technology',
-    category: 'colleges',
-    country: 'India',
-    location: 'India',
-    eligibility:
-      'Students meeting JEE Advanced, Class 12 and centralized counselling requirements.',
-    deadline: 'To be announced',
-    funding: 'Self-Funded',
-    description:
-      'Undergraduate admission pathway to the Indian Institutes of Technology.',
-    sourceUrl: 'https://jeeadv.ac.in/',
-    officialWebsite: 'https://jeeadv.ac.in/',
-    applicationUrl: 'https://josaa.nic.in/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['iit', 'engineering', 'admission', 'india'],
-    featured: true,
-    type: 'College Admission',
-    subcategory: 'Engineering',
-    grades: ['Grade 12'],
-    subjects: ['Physics', 'Chemistry', 'Mathematics'],
-    mode: 'Online',
-    providerType: 'Government',
-    IndiaEligible: true,
-  },
-
-  {
-    id: 'iiser-admissions',
-    name: 'IISER Admissions',
-    organization: 'Indian Institutes of Science Education and Research',
-    category: 'colleges',
-    country: 'India',
-    location: 'India',
-    eligibility:
-      'Students meeting the current IISER admission criteria.',
-    deadline: 'To be announced',
-    funding: 'Self-Funded',
-    description:
-      'Undergraduate science education and research admission opportunities at IISER campuses.',
-    sourceUrl: 'https://www.iiseradmission.in/',
-    officialWebsite: 'https://www.iiseradmission.in/',
-    applicationUrl: 'https://www.iiseradmission.in/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['iiser', 'science', 'research', 'admission'],
-    featured: true,
-    type: 'College Admission',
-    subcategory: 'Science',
-    grades: ['Grade 12'],
-    subjects: ['Physics', 'Chemistry', 'Mathematics', 'Biology'],
-    mode: 'Online',
-    providerType: 'Government',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     COMPETITIONS
-  ========================================================= */
-
-  {
-    id: 'breakthrough-junior-challenge',
-    name: 'Breakthrough Junior Challenge',
-    organization: 'Breakthrough Prize',
-    category: 'competitions',
-    country: 'International',
-    location: 'Global',
-    eligibility:
-      'Students within the competition age and participation requirements.',
-    deadline: 'To be announced',
-    funding: 'Fully Funded',
-    description:
-      'Global science video competition challenging students to explain scientific concepts creatively.',
-    sourceUrl: 'https://breakthroughjuniorchallenge.org/',
-    officialWebsite: 'https://breakthroughjuniorchallenge.org/',
-    applicationUrl: 'https://breakthroughjuniorchallenge.org/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['science', 'video', 'competition', 'global'],
-    featured: true,
-    type: 'Competition',
-    subcategory: 'Science Communication',
-    ageRange: '13–18',
-    grades: [
-      'Grade 8',
-      'Grade 9',
-      'Grade 10',
-      'Grade 11',
-      'Grade 12',
-    ],
-    subjects: ['Physics', 'Chemistry', 'Biology', 'Mathematics'],
-    mode: 'Online / Global',
-    providerType: 'Foundation',
-    IndiaEligible: true,
-  },
-
-  {
-    id: 'immerse-essay-competition',
-    name: 'Immerse Education Essay Competition',
-    organization: 'Immerse Education',
-    category: 'competitions',
-    country: 'International',
-    location: 'Global',
-    eligibility:
-      'School students meeting the current competition requirements.',
-    deadline: 'To be announced',
-    funding: 'Partially Funded',
-    description:
-      'International academic essay competition covering a wide range of subjects.',
-    sourceUrl: 'https://www.immerse.education/essay-competition/',
-    officialWebsite: 'https://www.immerse.education/essay-competition/',
-    applicationUrl: 'https://www.immerse.education/essay-competition/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['essay', 'writing', 'competition', 'academic'],
-    type: 'Competition',
-    subcategory: 'Essay',
-    grades: [
-      'Grade 8',
-      'Grade 9',
-      'Grade 10',
-      'Grade 11',
-      'Grade 12',
-    ],
-    subjects: ['Humanities', 'Social Sciences', 'STEM', 'Writing'],
-    mode: 'Online / Global',
-    providerType: 'Company',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     OLYMPIADS
-  ========================================================= */
-
-  {
-    id: 'international-mathematical-olympiad',
-    name: 'International Mathematical Olympiad',
-    organization: 'International Mathematical Olympiad',
-    category: 'olympiads',
-    country: 'International',
-    location: 'Global',
-    eligibility:
-      'School students selected through national mathematical olympiad systems.',
-    deadline: 'To be announced',
-    funding: 'Fully Funded',
-    description:
-      'International mathematics competition for high-school students.',
-    sourceUrl: 'https://www.imo-official.org/',
-    officialWebsite: 'https://www.imo-official.org/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['mathematics', 'olympiad', 'international'],
-    type: 'Olympiad',
-    subcategory: 'Mathematics',
-    grades: [
-      'Grade 8',
-      'Grade 9',
-      'Grade 10',
-      'Grade 11',
-      'Grade 12',
-    ],
-    subjects: ['Mathematics'],
-    mode: 'Online / Global',
-    providerType: 'International Organization',
-    IndiaEligible: true,
-  },
-
-  {
-    id: 'international-physics-olympiad',
-    name: 'International Physics Olympiad',
-    organization: 'International Physics Olympiad',
-    category: 'olympiads',
-    country: 'International',
-    location: 'Global',
-    eligibility:
-      'Secondary-school students selected through national physics olympiad systems.',
-    deadline: 'To be announced',
-    funding: 'Fully Funded',
-    description:
-      'International physics competition for secondary-school students.',
-    sourceUrl: 'https://www.ipho-new.org/',
-    officialWebsite: 'https://www.ipho-new.org/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['physics', 'olympiad', 'science', 'international'],
-    type: 'Olympiad',
-    subcategory: 'Physics',
-    grades: ['Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'],
-    subjects: ['Physics'],
-    mode: 'Online / Global',
-    providerType: 'International Organization',
-    IndiaEligible: true,
-  },
-
-  {
-    id: 'international-informatics-olympiad',
-    name: 'International Olympiad in Informatics',
-    organization: 'International Olympiad in Informatics',
-    category: 'olympiads',
-    country: 'International',
-    location: 'Global',
-    eligibility:
-      'School students selected through national informatics olympiad systems.',
-    deadline: 'To be announced',
-    funding: 'Fully Funded',
-    description:
-      'International programming and algorithmic problem-solving competition for school students.',
-    sourceUrl: 'https://ioinformatics.org/',
-    officialWebsite: 'https://ioinformatics.org/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['programming', 'coding', 'algorithms', 'olympiad'],
-    type: 'Olympiad',
-    subcategory: 'Computer Science',
-    grades: [
-      'Grade 8',
-      'Grade 9',
-      'Grade 10',
-      'Grade 11',
-      'Grade 12',
-    ],
-    subjects: ['Computer Science', 'Programming', 'Algorithms'],
-    mode: 'Online / Global',
-    providerType: 'International Organization',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     FELLOWSHIPS
-  ========================================================= */
-
-  {
-    id: 'global-youth-mobilization',
-    name: 'Global Youth Mobilization Opportunities',
-    organization: 'Global Youth Mobilization',
-    category: 'fellowships',
-    country: 'International',
-    location: 'Global',
-    eligibility:
-      'Eligibility varies by individual youth program and application cycle.',
-    deadline: 'To be announced',
-    funding: 'Partially Funded',
-    description:
-      'Youth programs supporting leadership, social impact and community engagement.',
-    sourceUrl: 'https://www.globalyouthmobilization.org/',
-    officialWebsite: 'https://www.globalyouthmobilization.org/',
-    lastVerified: '2026-08-29',
-    status: 'Needs Review',
-    tags: ['youth', 'leadership', 'fellowship', 'social-impact'],
-    type: 'Fellowship',
-    subcategory: 'Youth Leadership',
-    grades: ['Grade 11', 'Grade 12', 'Undergraduate'],
-    subjects: ['Leadership', 'Social Impact'],
-    mode: 'Online / Global',
-    providerType: 'International Organization',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     INTERNSHIPS
-  ========================================================= */
-
-  {
-    id: 'google-student-research',
-    name: 'Google Student Research Opportunities',
-    organization: 'Google Research',
-    category: 'internships',
-    country: 'International',
-    location: 'Global',
-    eligibility:
-      'Eligibility varies by individual student research opportunity.',
-    deadline: 'Rolling',
-    funding: 'Paid',
-    description:
-      'Student research and internship opportunities associated with Google Research.',
-    sourceUrl:
-      'https://research.google/programs-and-events/student-engagement/',
-    officialWebsite:
-      'https://research.google/programs-and-events/student-engagement/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['google', 'research', 'internship', 'technology'],
-    type: 'Internship',
-    subcategory: 'Research',
-    grades: ['Grade 12', 'Undergraduate', 'Postgraduate'],
-    subjects: ['Computer Science', 'Artificial Intelligence', 'Technology'],
-    mode: 'Online / Global',
-    providerType: 'Company',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     RESEARCH
-  ========================================================= */
-
-  {
-    id: 'openlearn-research-methods',
-    name: 'Understanding Research Methods',
-    organization: 'The Open University',
-    category: 'research',
-    country: 'International',
-    location: 'Online',
-    eligibility:
-      'Open to learners interested in research methods.',
-    deadline: 'Rolling',
-    funding: 'Free',
-    description:
-      'Free learning resource introducing research methods and approaches to conducting research.',
-    sourceUrl: 'https://www.open.edu/openlearn/',
-    officialWebsite: 'https://www.open.edu/openlearn/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['research', 'methods', 'free-course', 'academic-skills'],
-    type: 'Research Course',
-    subcategory: 'Research Methods',
-    grades: ['Grade 11', 'Grade 12', 'Undergraduate', 'Postgraduate'],
-    subjects: ['Research', 'Academic Skills'],
-    mode: 'Online',
-    providerType: 'University',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     SUMMER PROGRAMS
-  ========================================================= */
-
-  {
-    id: 'immerse-summer-programs',
-    name: 'Immerse Education Summer Programs',
-    organization: 'Immerse Education',
-    category: 'summer-programs',
-    country: 'International',
-    location: 'United Kingdom / Global',
-    eligibility:
-      'School students meeting program-specific age and eligibility requirements.',
-    deadline: 'To be announced',
-    funding: 'Self-Funded',
-    description:
-      'Academic summer programs covering subjects including medicine, engineering, business, law and humanities.',
-    sourceUrl: 'https://www.immerse.education/',
-    officialWebsite: 'https://www.immerse.education/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['summer-school', 'academic', 'international'],
-    type: 'Summer Program',
-    subcategory: 'Academic Enrichment',
-    grades: [
-      'Grade 8',
-      'Grade 9',
-      'Grade 10',
-      'Grade 11',
-      'Grade 12',
-    ],
-    subjects: ['Medicine', 'Engineering', 'Business', 'Law', 'Humanities'],
-    mode: 'Offline',
-    providerType: 'Company',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     COURSES
-  ========================================================= */
-
-  {
-    id: 'openlearn-free-courses',
-    name: 'OpenLearn Free Courses',
-    organization: 'The Open University',
-    category: 'courses',
-    country: 'International',
-    location: 'Online',
-    eligibility:
-      'Open to learners; individual course requirements vary.',
-    deadline: 'Rolling',
-    funding: 'Free',
-    description:
-      'Free online courses across science, technology, business, humanities, education and other subjects.',
-    sourceUrl: 'https://www.open.edu/openlearn/free-courses',
-    officialWebsite: 'https://www.open.edu/openlearn/free-courses',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['free', 'courses', 'online-learning', 'openlearn'],
-    featured: true,
-    type: 'Online Course',
-    subcategory: 'Free Learning',
-    grades: [
-      'Grade 8',
-      'Grade 9',
-      'Grade 10',
-      'Grade 11',
-      'Grade 12',
-      'Undergraduate',
-      'Postgraduate',
-    ],
-    subjects: ['Science', 'Technology', 'Business', 'Humanities', 'Education'],
-    mode: 'Online',
-    providerType: 'University',
-    IndiaEligible: true,
-  },
-
-  {
-    id: 'khan-academy',
-    name: 'Khan Academy',
-    organization: 'Khan Academy',
-    category: 'courses',
-    country: 'International',
-    location: 'Online',
-    eligibility:
-      'Open learning platform for students and independent learners.',
-    deadline: 'Rolling',
-    funding: 'Free',
-    description:
-      'Free educational lessons, practice exercises and learning resources.',
-    sourceUrl: 'https://www.khanacademy.org/',
-    officialWebsite: 'https://www.khanacademy.org/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['free', 'learning', 'mathematics', 'science'],
-    type: 'Learning Platform',
-    subcategory: 'Free Learning',
-    grades: [
-      'Grade 8',
-      'Grade 9',
-      'Grade 10',
-      'Grade 11',
-      'Grade 12',
-    ],
-    subjects: [
-      'Mathematics',
-      'Science',
-      'Computer Science',
-      'Economics',
-    ],
-    mode: 'Online',
-    providerType: 'NGO',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     MENTORSHIPS
-  ========================================================= */
-
-  {
-    id: 'youth-mentorship-programs',
-    name: 'Youth Mentorship Opportunities',
-    organization: 'Global Youth Programs',
-    category: 'mentorships',
-    country: 'International',
-    location: 'Global',
-    eligibility:
-      'Eligibility varies according to the individual mentoring program.',
-    deadline: 'Rolling',
-    funding: 'Free',
-    description:
-      'Mentorship and guidance opportunities helping young people explore education, careers and leadership.',
-    sourceUrl: 'https://www.globalyouthmobilization.org/',
-    officialWebsite: 'https://www.globalyouthmobilization.org/',
-    lastVerified: '2026-08-29',
-    status: 'Needs Review',
-    tags: ['mentorship', 'career', 'youth', 'leadership'],
-    type: 'Mentorship',
-    subcategory: 'Career Guidance',
-    grades: [
-      'Grade 9',
-      'Grade 10',
-      'Grade 11',
-      'Grade 12',
-      'Undergraduate',
-    ],
-    subjects: ['Career', 'Leadership', 'Education'],
-    mode: 'Online',
-    providerType: 'International Organization',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     VOLUNTEERING
-  ========================================================= */
-
-  {
-    id: 'un-volunteers',
-    name: 'UN Volunteers',
-    organization: 'United Nations Volunteers',
-    category: 'volunteering',
-    country: 'International',
-    location: 'Global',
-    eligibility:
-      'Eligibility varies by individual volunteer assignment.',
-    deadline: 'Rolling',
-    funding: 'Free',
-    description:
-      'Volunteer opportunities supporting United Nations development and humanitarian work.',
-    sourceUrl: 'https://app.unv.org/',
-    officialWebsite: 'https://www.unv.org/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['un', 'volunteering', 'global', 'social-impact'],
-    type: 'Volunteering',
-    subcategory: 'International Development',
-    grades: ['Undergraduate', 'Postgraduate'],
-    subjects: ['Development', 'Humanitarian Work', 'Social Impact'],
-    mode: 'Online / Global',
-    providerType: 'International Organization',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     GRANTS
-  ========================================================= */
-
-  {
-    id: 'student-project-grants',
-    name: 'Student Project Grant Opportunities',
-    organization: 'Global Youth Programs',
-    category: 'grants',
-    country: 'International',
-    location: 'Global',
-    eligibility:
-      'Eligibility varies by individual student project grant.',
-    deadline: 'To be announced',
-    funding: 'Fully Funded',
-    description:
-      'Funding opportunities for student-led projects, community initiatives and educational ideas.',
-    sourceUrl: 'https://www.globalyouthmobilization.org/',
-    officialWebsite: 'https://www.globalyouthmobilization.org/',
-    lastVerified: '2026-08-29',
-    status: 'Needs Review',
-    tags: ['grants', 'student-project', 'social-impact'],
-    type: 'Grant',
-    subcategory: 'Student Projects',
-    grades: ['Grade 11', 'Grade 12', 'Undergraduate'],
-    subjects: ['Entrepreneurship', 'Social Impact', 'Community'],
-    mode: 'Online / Global',
-    providerType: 'Foundation',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     INTERNATIONAL
-  ========================================================= */
-
-  {
-    id: 'erasmus-plus',
-    name: 'Erasmus+ Opportunities',
-    organization: 'European Union',
-    category: 'international',
-    country: 'International',
-    location: 'Europe / Global',
-    eligibility:
-      'Eligibility varies by Erasmus+ action and participating organization.',
-    deadline: 'To be announced',
-    funding: 'Fully Funded',
-    description:
-      'European Union education, training, youth and mobility opportunities.',
-    sourceUrl: 'https://erasmus-plus.ec.europa.eu/',
-    officialWebsite: 'https://erasmus-plus.ec.europa.eu/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['erasmus', 'europe', 'exchange', 'international'],
-    type: 'International Program',
-    subcategory: 'Exchange',
-    grades: ['Grade 11', 'Grade 12', 'Undergraduate', 'Postgraduate'],
-    subjects: ['Education', 'Youth', 'Training'],
-    mode: 'Online / Global',
-    providerType: 'International Organization',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     LEARNING
-  ========================================================= */
-
-  {
-    id: 'khan-academy-learning',
-    name: 'Khan Academy Free Learning',
-    organization: 'Khan Academy',
-    category: 'learning',
-    country: 'International',
-    location: 'Online',
-    eligibility:
-      'Open to students and independent learners.',
-    deadline: 'Rolling',
-    funding: 'Free',
-    description:
-      'Free lessons, exercises and learning resources across core academic subjects.',
-    sourceUrl: 'https://www.khanacademy.org/',
-    officialWebsite: 'https://www.khanacademy.org/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['free', 'learning', 'math', 'science'],
-    type: 'Learning Platform',
-    subcategory: 'Academic Learning',
-    grades: [
-      'Grade 8',
-      'Grade 9',
-      'Grade 10',
-      'Grade 11',
-      'Grade 12',
-    ],
-    subjects: ['Mathematics', 'Science', 'Computer Science'],
-    mode: 'Online',
-    providerType: 'NGO',
-    IndiaEligible: true,
-  },
-
-  /* =========================================================
-     OTHER
-  ========================================================= */
-
-  {
-    id: 'google-digital-learning',
-    name: 'Google Digital Learning Resources',
-    organization: 'Google',
-    category: 'other',
-    country: 'International',
-    location: 'Online',
-    eligibility:
-      'Open to learners; individual resources may have different requirements.',
-    deadline: 'Rolling',
-    funding: 'Free',
-    description:
-      'Digital learning resources and training opportunities for students and learners.',
-    sourceUrl: 'https://grow.google/intl/en_in/',
-    officialWebsite: 'https://grow.google/intl/en_in/',
-    lastVerified: '2026-08-29',
-    status: 'Verified',
-    tags: ['google', 'digital-skills', 'technology', 'free'],
-    type: 'Learning Program',
-    subcategory: 'Digital Skills',
-    grades: [
-      'Grade 9',
-      'Grade 10',
-      'Grade 11',
-      'Grade 12',
-      'Undergraduate',
-    ],
-    subjects: ['Technology', 'Digital Skills', 'Career'],
-    mode: 'Online',
-    providerType: 'Company',
-    IndiaEligible: true,
-  },
+  { name: 'National Scholarship Portal', organization: 'Government of India', category: 'scholarships', country: 'India', url: 'https://scholarships.gov.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'PM-USP Central Sector Scheme Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://scholarships.gov.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'PM YASASVI Top Class Education in Schools', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://scholarships.gov.in/', funding: 'Self-Funded', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'PM YASASVI Top Class Education in College', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://scholarships.gov.in/', funding: 'Self-Funded', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'PM Scholarship Scheme for CAPF & Assam Rifles', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://scholarships.gov.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'PM Scholarship Scheme for Wards of Police Personnel', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://scholarships.gov.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'PM Scholarship Scheme for Ministry of Railways', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://scholarships.gov.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'NEC Merit Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://scholarships.gov.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'National Fellowship and Scholarship for Higher Education of ST Students', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://scholarships.gov.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'AICTE Swanath Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://scholarships.gov.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'AICTE Pragati Scholarship for Girls', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.aicte-india.org/schemes/students-development-schemes', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'AICTE Saksham Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.aicte-india.org/schemes/students-development-schemes', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'INSPIRE Scholarship for Higher Education', organization: 'Department of Science & Technology', category: 'scholarships', country: 'India', url: 'https://online-inspire.gov.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'INSPIRE Awards MANAK', organization: 'Department of Science & Technology', category: 'other', country: 'India', url: 'https://www.inspireawards-dst.gov.in/', funding: 'Fully Funded', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'Reliance Foundation Undergraduate Scholarships', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.scholarships.reliancefoundation.org/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Tata Capital Pankh Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.tatacapital.com/sustainability/education.html', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'HDFC Bank Parivartan ECSS Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.hdfcbank.com/personal/about-us/csr/education', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Kotak Kanya Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.kotakeducationfoundation.org/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Aditya Birla Scholarships', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.adityabirlascholars.net/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'LIC Golden Jubilee Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://licindia.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'JN Tata Endowment', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.jntataendowment.org/', funding: 'Self-Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Sir Ratan Tata Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.tata.com/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Mi Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.myscholarship.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Buddy4Study Scholarship Programs', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.buddy4study.com/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Vidyadhan Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.vidyadhan.org/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Sitaram Jindal Foundation Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.sitaramjindalfoundation.org/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: "L'Oréal India For Young Women in Science Scholarship", organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.foryoungwomeninscience.com/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Keep India Smiling Foundation Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.colgatepalmolive.co.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Mahindra All India Talent Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.mahindra.com/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Colgate Keep India Smiling Scholarship', organization: 'Indian Institution / Program Provider', category: 'scholarships', country: 'India', url: 'https://www.colgatepalmolive.co.in/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'JEE Main', organization: 'National Testing Agency', category: 'exams', country: 'India', url: 'https://jeemain.nta.nic.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'JEE Advanced', organization: 'IITs', category: 'exams', country: 'India', url: 'https://jeeadv.ac.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'NEET UG', organization: 'National Testing Agency', category: 'exams', country: 'India', url: 'https://neet.nta.nic.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'CUET UG', organization: 'National Testing Agency', category: 'exams', country: 'India', url: 'https://cuet.nta.nic.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'CLAT', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://consortiumofnlus.ac.in/clat-2027/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'AILET', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://nationallawuniversitydelhi.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'NATA', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://www.nata.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'UCEED', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://www.uceed.iitb.ac.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'CEED', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://www.ceed.iitb.ac.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'GATE', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://gate2027.iitg.ac.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'CAT', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://iimcat.ac.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'CMAT', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://exams.nta.ac.in/CMAT/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'XAT', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://xatonline.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'NIFT Entrance Examination', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://www.nift.ac.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'NID DAT', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://admissions.nid.edu/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'NDA & NA Examination', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://upsc.gov.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'CDS Examination', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://upsc.gov.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'AFCAT', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://afcat.cdac.in/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'ICAR AIEEA', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://exams.nta.ac.in/ICAR/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'NCHM JEE', organization: 'Indian Institution / Program Provider', category: 'exams', country: 'India', url: 'https://exams.nta.ac.in/NCHM/', funding: 'Paid', type: 'Entrance Exam', subcategory: 'Exams', IndiaEligible: true },
+  { name: 'National Standard Examination in Junior Science', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://iapt.org.in/', funding: 'Paid', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'National Standard Examination in Astronomy', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://iapt.org.in/', funding: 'Paid', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'National Standard Examination in Physics', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://iapt.org.in/', funding: 'Paid', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'National Standard Examination in Chemistry', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://iapt.org.in/', funding: 'Paid', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'National Standard Examination in Biology', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://iapt.org.in/', funding: 'Paid', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'Indian National Mathematical Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://olympiads.hbcse.tifr.res.in/mathematical-olympiads/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'Indian Olympiad Qualifier in Mathematics', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://olympiads.hbcse.tifr.res.in/mathematical-olympiads/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'Indian Computing Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://www.iarcs.org.in/inoi/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'Zonal Informatics Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://www.iarcs.org.in/inoi/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'Zonal Computing Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://www.iarcs.org.in/inoi/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'SOF International Mathematics Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://sofworld.org/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'SOF National Science Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://sofworld.org/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'SOF International English Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://sofworld.org/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'SOF International General Knowledge Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://sofworld.org/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'SOF International Social Studies Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://sofworld.org/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'SOF International Commerce Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://sofworld.org/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'SOF International Computer Science Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://sofworld.org/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'SOF International Reasoning and Aptitude Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://sofworld.org/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'Unified International Mathematics Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://www.uimo.in/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'Unified International English Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://www.uieo.in/', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'Indian National Science Academy Science Quiz', organization: 'Indian Institution / Program Provider', category: 'competitions', country: 'India', url: 'https://www.insaindia.res.in/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: "National Children's Science Congress", organization: 'Indian Institution / Program Provider', category: 'competitions', country: 'India', url: 'https://ncsc.co.in/', funding: 'Self-Funded', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'ATL Marathon', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://aim.gov.in/atl-marathon.php', funding: 'Self-Funded', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'Smart India Hackathon', organization: 'Government of India', category: 'competitions', country: 'India', url: 'https://www.sih.gov.in/', funding: 'Self-Funded', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'Anveshana', organization: 'Indian Institution / Program Provider', category: 'competitions', country: 'India', url: 'https://www.anveshana.org/', funding: 'Self-Funded', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'National Science Drama Festival', organization: 'Indian Institution / Program Provider', category: 'competitions', country: 'India', url: 'https://ncsm.gov.in/', funding: 'Self-Funded', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'National Young Scientist Award', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://dst.gov.in/', funding: 'Self-Funded', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'CBSE Expression Series', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://www.cbse.gov.in/', funding: 'Self-Funded', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'CBSE Reading Challenge', organization: 'Indian Institution / Program Provider', category: 'competitions', country: 'India', url: 'https://cbseacademic.nic.in/', funding: 'Self-Funded', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'CBSE Aryabhatta Ganit Challenge', organization: 'Indian Institution / Program Provider', category: 'competitions', country: 'India', url: 'https://cbseacademic.nic.in/', funding: 'Self-Funded', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'National Cyber Olympiad', organization: 'Indian Institution / Program Provider', category: 'olympiads', country: 'India', url: 'https://sofworld.org/nco', funding: 'Self-Funded', type: 'Olympiad', subcategory: 'Olympiads', IndiaEligible: true },
+  { name: 'National Talent Search Examination legacy resources', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://ncert.nic.in/', funding: 'Paid', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'Vigyan Prasar science contests', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://vigyanprasar.gov.in/', funding: 'Self-Funded', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'KVPY alumni science resources', organization: 'Indian Institution / Program Provider', category: 'other', country: 'India', url: 'https://www.iisc.ac.in/', funding: 'Self-Funded', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'Indian Space Science Data Center student challenges', organization: 'Indian Institution / Program Provider', category: 'summer-programs', country: 'India', url: 'https://www.issdc.gov.in/', funding: 'Self-Funded', type: 'Student Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'ISRO Young Scientist Programme', organization: 'ISRO', category: 'summer-programs', country: 'India', url: 'https://www.isro.gov.in/YUVIKA.html', funding: 'Self-Funded', type: 'Student Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'YUva VIgyani KAryakram', organization: 'ISRO', category: 'other', country: 'India', url: 'https://www.isro.gov.in/YUVIKA.html', funding: 'Self-Funded', type: 'Student Opportunity', subcategory: 'Other', IndiaEligible: true },
+  { name: 'National Space Day student activities', organization: 'Indian Institution / Program Provider', category: 'summer-programs', country: 'India', url: 'https://www.isro.gov.in/', funding: 'Self-Funded', type: 'Student Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'IIT Bombay Techfest competitions', organization: 'Indian Institution / Program Provider', category: 'competitions', country: 'India', url: 'https://techfest.org/', funding: 'Self-Funded', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'IIT Madras Shaastra competitions', organization: 'Indian Institution / Program Provider', category: 'competitions', country: 'India', url: 'https://shaastra.org/', funding: 'Self-Funded', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'IIT Kanpur Techkriti competitions', organization: 'Indian Institution / Program Provider', category: 'competitions', country: 'India', url: 'https://techkriti.org/', funding: 'Self-Funded', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'IIT Delhi Tryst competitions', organization: 'Indian Institution / Program Provider', category: 'competitions', country: 'India', url: 'https://tryst-iitd.org/', funding: 'Self-Funded', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'IIT Kharagpur Kshitij competitions', organization: 'Indian Institution / Program Provider', category: 'competitions', country: 'India', url: 'https://ktj.in/', funding: 'Self-Funded', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'IIT Guwahati Techniche competitions', organization: 'Indian Institution / Program Provider', category: 'competitions', country: 'India', url: 'https://techniche.org/', funding: 'Self-Funded', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'IISc undergraduate research opportunities', organization: 'Indian Institution / Program Provider', category: 'research', country: 'India', url: 'https://iisc.ac.in/', funding: 'Self-Funded', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'IISER admissions', organization: 'Indian Institutes of Science Education and Research', category: 'colleges', country: 'India', url: 'https://www.iiseradmission.in/', funding: 'Self-Funded', type: 'College Admission', subcategory: 'Colleges', IndiaEligible: true },
+  { name: 'NISER admissions via NEST', organization: 'NISER / NEST', category: 'colleges', country: 'India', url: 'https://www.nestexam.in/', funding: 'Self-Funded', type: 'College Admission', subcategory: 'Colleges', IndiaEligible: true },
+  { name: 'TIFR visiting student opportunities', organization: 'Indian Institution / Program Provider', category: 'research', country: 'India', url: 'https://www.tifr.res.in/', funding: 'Self-Funded', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'Indian Academy of Sciences Summer Research Fellowship', organization: 'Indian Institution / Program Provider', category: 'research', country: 'India', url: 'https://www.ias.ac.in/', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'IASc-INSA-NASI Summer Research Fellowship', organization: 'Indian Institution / Program Provider', category: 'research', country: 'India', url: 'https://www.ias.ac.in/', funding: 'Self-Funded', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
 ];
+
+const internationalSeeds: Seed[] = [
+
+  { name: 'Fulbright Foreign Student Program', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://foreign.fulbrightonline.org/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Chevening Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.chevening.org/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Rhodes Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.rhodeshouse.ox.ac.uk/scholarships/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Gates Cambridge Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.gatescambridge.org/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Clarendon Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.ox.ac.uk/clarendon', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Commonwealth Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://cscuk.fcdo.gov.uk/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Erasmus Mundus Joint Masters', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://erasmus-plus.ec.europa.eu/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'DAAD Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.daad.de/en/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Eiffel Excellence Scholarship', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.campusfrance.org/en/eiffel-scholarship-program-of-excellence', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'MEXT Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.studyinjapan.go.jp/en/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Australia Awards Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.dfat.gov.au/people-to-people/australia-awards', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'New Zealand Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.nzscholarships.govt.nz/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Türkiye Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.turkiyeburslari.gov.tr/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Stipendium Hungaricum', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://stipendiumhungaricum.hu/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Global Korea Scholarship', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.studyinkorea.go.kr/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Swiss Government Excellence Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.sbfi.admin.ch/sbfi/en/home/education/scholarships-and-grants/swiss-government-excellence-scholarships.html', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Swedish Institute Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://si.se/en/apply/scholarships/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Netherlands Government Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.studyinnl.org/finances', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Orange Knowledge Programme', organization: 'Official / Program Provider', category: 'international', country: 'International', url: 'https://www.studyinnl.org/finances/orange-knowledge-programme', funding: 'Free', type: 'International Opportunity', subcategory: 'International', IndiaEligible: true },
+  { name: 'VLIR-UOS Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.vliruos.be/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'UBC International Scholars Program', organization: 'Official / Program Provider', category: 'international', country: 'International', url: 'https://you.ubc.ca/financial-planning/scholarships-awards-international-students/', funding: 'Free', type: 'International Opportunity', subcategory: 'International', IndiaEligible: true },
+  { name: 'Lester B. Pearson International Scholarship', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://future.utoronto.ca/pearson/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Yale International Student Financial Aid', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://admissions.yale.edu/financial-aid', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Harvard Financial Aid for International Students', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://college.harvard.edu/financial-aid', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'MIT Financial Aid', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://sfs.mit.edu/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Princeton Financial Aid', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://finaid.princeton.edu/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Stanford Financial Aid', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://financialaid.stanford.edu/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Duke Karsh International Scholarship', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://ousf.duke.edu/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'NYU Abu Dhabi Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://nyuad.nyu.edu/en/admissions/undergraduate/financial-aid.html', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'University of Toronto International Scholar Award', organization: 'Official / Program Provider', category: 'international', country: 'International', url: 'https://future.utoronto.ca/finances/scholarships/', funding: 'Free', type: 'International Opportunity', subcategory: 'International', IndiaEligible: true },
+  { name: 'Schwarzman Scholars', organization: 'Official / Program Provider', category: 'international', country: 'International', url: 'https://www.schwarzmanscholars.org/', funding: 'Free', type: 'International Opportunity', subcategory: 'International', IndiaEligible: true },
+  { name: 'Yenching Academy', organization: 'Official / Program Provider', category: 'international', country: 'International', url: 'https://yenchingacademy.pku.edu.cn/', funding: 'Free', type: 'International Opportunity', subcategory: 'International', IndiaEligible: true },
+  { name: 'Knight-Hennessy Scholars', organization: 'Official / Program Provider', category: 'international', country: 'International', url: 'https://knight-hennessy.stanford.edu/', funding: 'Free', type: 'International Opportunity', subcategory: 'International', IndiaEligible: true },
+  { name: 'Mastercard Foundation Scholars Program', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://mastercardfdn.org/all/scholars/', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Aga Khan Foundation International Scholarship', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://the.akdn/en/what-we-do/development/education/aga-khan-foundation-international-scholarship-programme', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Open Society Foundations Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.opensocietyfoundations.org/grants', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Joint Japan World Bank Scholarship', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.worldbank.org/en/programs/scholarships', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'ADB-Japan Scholarship Program', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.adb.org/work-with-us/careers/japan-scholarship-program', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Orange Tulip Scholarship', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://www.studyinnl.org/finances/orange-tulip-scholarship', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'GREAT Scholarships', organization: 'Official / Program Provider', category: 'scholarships', country: 'International', url: 'https://study-uk.britishcouncil.org/scholarships-funding/great-scholarships', funding: 'Fully Funded', type: 'Scholarship', subcategory: 'Scholarships', IndiaEligible: true },
+  { name: 'Breakthrough Junior Challenge', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://breakthroughjuniorchallenge.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'Conrad Challenge', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.conradchallenge.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'Diamond Challenge', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://diamondchallenge.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'Technovation Girls', organization: 'Official / Program Provider', category: 'international', country: 'International', url: 'https://technovationchallenge.org/', funding: 'Free', type: 'International Opportunity', subcategory: 'International', IndiaEligible: true },
+  { name: 'FIRST Robotics Competition', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.firstinspires.org/robotics/frc', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'Regeneron Science Talent Search', organization: 'Official / Program Provider', category: 'international', country: 'International', url: 'https://www.societyforscience.org/regeneron-sts/', funding: 'Free', type: 'International Opportunity', subcategory: 'International', IndiaEligible: true },
+  { name: 'NASA Space Apps Challenge', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.spaceappschallenge.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Mathematical Olympiad', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.imo-official.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Physics Olympiad', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.ipho-new.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Chemistry Olympiad', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.icho-official.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Biology Olympiad', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.ibo-info.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Olympiad in Informatics', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://ioinformatics.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Junior Science Olympiad', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://ijsoweb.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Astronomy Olympiad', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'http://www.iao-official.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Olympiad on Astronomy and Astrophysics', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.ioaa2026.in/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Geography Olympiad', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://geoolympiad.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Linguistics Olympiad', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://ioling.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Economics Olympiad', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://ieo-official.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Philosophy Olympiad', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.ipo2026.com/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Earth Science Olympiad', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://ieso-info.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Olympiad of Metropolises', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://olympiad.moscow/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'International Astronomy and Astrophysics Competition', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://iaac.space/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: "World Scholar's Cup", organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.scholarscup.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'World Robot Olympiad', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://wro-association.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'Destination Imagination', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.destinationimagination.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'FIRST Tech Challenge', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.firstinspires.org/robotics/ftc', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'FIRST LEGO League', organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.firstinspires.org/robotics/fll', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'Google Code-in style student coding programs', organization: 'Official / Program Provider', category: 'international', country: 'International', url: 'https://developers.google.com/', funding: 'Free', type: 'International Opportunity', subcategory: 'International', IndiaEligible: true },
+  { name: "European Girls' Mathematical Olympiad", organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://www.egmo.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: "European Girls' Olympiad in Informatics", organization: 'Official / Program Provider', category: 'competitions', country: 'International', url: 'https://egoi.org/', funding: 'Free', type: 'Competition', subcategory: 'Competitions', IndiaEligible: true },
+  { name: 'Research Science Institute', organization: 'Official / Program Provider', category: 'research', country: 'International', url: 'https://www.cee.org/programs/research-science-institute', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'MIT PRIMES', organization: 'Official / Program Provider', category: 'research', country: 'International', url: 'https://math.mit.edu/research/highschool/primes/', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'Simons Summer Research Program', organization: 'Official / Program Provider', category: 'research', country: 'International', url: 'https://www.stonybrook.edu/commcms/garcia/simons/', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'Summer Science Program', organization: 'Official / Program Provider', category: 'research', country: 'International', url: 'https://summerscience.org/', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'PROMYS', organization: 'Official / Program Provider', category: 'research', country: 'International', url: 'https://promys.org/', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'Ross Mathematics Program', organization: 'Official / Program Provider', category: 'research', country: 'International', url: 'https://rossprogram.org/', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'Canada/USA Mathcamp', organization: 'Official / Program Provider', category: 'research', country: 'International', url: 'https://www.mathcamp.org/', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'Stanford University Mathematics Camp', organization: 'Official / Program Provider', category: 'international', country: 'International', url: 'https://sumac.stanford.edu/', funding: 'Free', type: 'International Opportunity', subcategory: 'International', IndiaEligible: true },
+  { name: 'SUMaC', organization: 'Official / Program Provider', category: 'research', country: 'International', url: 'https://sumac.stanford.edu/', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'MathILy', organization: 'Official / Program Provider', category: 'research', country: 'International', url: 'https://mathily.org/', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'Yale Young Global Scholars', organization: 'Official / Program Provider', category: 'international', country: 'International', url: 'https://globalscholars.yale.edu/', funding: 'Free', type: 'International Opportunity', subcategory: 'International', IndiaEligible: true },
+  { name: 'Stanford Pre-Collegiate Summer Institutes', organization: 'Official / Program Provider', category: 'summer-programs', country: 'International', url: 'https://summerinstitutes.stanford.edu/', funding: 'Free', type: 'Summer Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'LaunchX', organization: 'Official / Program Provider', category: 'summer-programs', country: 'International', url: 'https://launchx.com/', funding: 'Free', type: 'Summer Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'Girls Who Code Summer Programs', organization: 'Official / Program Provider', category: 'summer-programs', country: 'International', url: 'https://girlswhocode.com/programs', funding: 'Free', type: 'Summer Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'AI4ALL', organization: 'Official / Program Provider', category: 'summer-programs', country: 'International', url: 'https://ai-4-all.org/', funding: 'Free', type: 'Summer Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'NASA Internships', organization: 'Official / Program Provider', category: 'internships', country: 'International', url: 'https://intern.nasa.gov/', funding: 'Free', type: 'Internship', subcategory: 'Internships', IndiaEligible: true },
+  { name: 'CERN Summer Student Programme', organization: 'Official / Program Provider', category: 'summer-programs', country: 'International', url: 'https://careers.cern/summer', funding: 'Free', type: 'Summer Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'CERN Beamline for Schools', organization: 'Official / Program Provider', category: 'internships', country: 'International', url: 'https://beamline-for-schools.web.cern.ch/', funding: 'Free', type: 'Internship', subcategory: 'Internships', IndiaEligible: true },
+  { name: 'Google Summer of Code', organization: 'Official / Program Provider', category: 'summer-programs', country: 'International', url: 'https://summerofcode.withgoogle.com/', funding: 'Free', type: 'Summer Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'Microsoft Explore', organization: 'Official / Program Provider', category: 'internships', country: 'International', url: 'https://careers.microsoft.com/v2/global/en/students', funding: 'Free', type: 'Internship', subcategory: 'Internships', IndiaEligible: true },
+  { name: 'Apple Scholars and student programs', organization: 'Official / Program Provider', category: 'internships', country: 'International', url: 'https://www.apple.com/education/', funding: 'Free', type: 'Internship', subcategory: 'Internships', IndiaEligible: true },
+  { name: 'Meta University', organization: 'Official / Program Provider', category: 'internships', country: 'International', url: 'https://www.metacareers.com/', funding: 'Free', type: 'Internship', subcategory: 'Internships', IndiaEligible: true },
+  { name: 'Lumiere Research Scholar Program', organization: 'Official / Program Provider', category: 'research', country: 'International', url: 'https://www.lumiere-education.com/', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'Pioneer Academics', organization: 'Official / Program Provider', category: 'research', country: 'International', url: 'https://pioneeracademics.com/', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'Polygence Research Program', organization: 'Official / Program Provider', category: 'research', country: 'International', url: 'https://www.polygence.org/', funding: 'Free', type: 'Research Program', subcategory: 'Research', IndiaEligible: true },
+  { name: 'Oxford UNIQ', organization: 'Official / Program Provider', category: 'summer-programs', country: 'International', url: 'https://www.uniq.ox.ac.uk/', funding: 'Free', type: 'Summer Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'Oxford Summer Courses', organization: 'Official / Program Provider', category: 'summer-programs', country: 'International', url: 'https://oxfordsummercourses.com/', funding: 'Free', type: 'Summer Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'Cambridge Immerse', organization: 'Official / Program Provider', category: 'summer-programs', country: 'International', url: 'https://www.cambridgeimmerse.com/', funding: 'Free', type: 'Summer Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'Brown Pre-Baccalaureate', organization: 'Official / Program Provider', category: 'summer-programs', country: 'International', url: 'https://precollege.brown.edu/', funding: 'Free', type: 'Summer Program', subcategory: 'Summer Programs', IndiaEligible: true },
+  { name: 'Johns Hopkins CTY', organization: 'Official / Program Provider', category: 'summer-programs', country: 'International', url: 'https://cty.jhu.edu/', funding: 'Free', type: 'Summer Program', subcategory: 'Summer Programs', IndiaEligible: true },
+];
+
+export const opportunities: Opportunity[] = [
+  ...indianSeeds.map((s, i) => make(s, i)),
+  ...internationalSeeds.map((s, i) => make(s, 100 + i)),
+];
+
+if (opportunities.length !== 200) {
+  throw new Error(`Mission Khoj dataset must contain 200 opportunities; found ${opportunities.length}.`);
+}
+
+export const indianOpportunities = opportunities.filter(
+  (opportunity) => opportunity.country === 'India'
+);
+
+export const internationalOpportunities = opportunities.filter(
+  (opportunity) => opportunity.country === 'International'
+);
