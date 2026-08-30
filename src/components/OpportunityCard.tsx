@@ -17,10 +17,16 @@ import {
 } from 'lucide-react';
 
 import type { Opportunity } from '@/types';
-import { categories } from '@/data/categories';
+import { categoriesWithCounts } from '@/data/categories';
 
 function formatDate(value: string): string {
-  if (value === 'Rolling') return 'Rolling';
+  if (
+    value === 'Rolling' ||
+    value === 'To be announced' ||
+    value === 'TBA'
+  ) {
+    return value;
+  }
 
   const d = new Date(value);
 
@@ -61,7 +67,7 @@ export function OpportunityCard({
   opportunity,
   matchReason,
 }: OpportunityCardProps) {
-  const category = categories.find(
+  const category = categoriesWithCounts.find(
     (c) => c.id === opportunity.category
   );
 
@@ -69,14 +75,14 @@ export function OpportunityCard({
 
   const fundingTone =
     opportunity.funding === 'Fully Funded'
-      ? 'text-emerald-300/90 bg-emerald-500/10 border-emerald-500/20'
+      ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300/90'
       : opportunity.funding === 'Free'
-        ? 'text-sky-300/90 bg-sky-500/10 border-sky-500/20'
+        ? 'border-sky-500/20 bg-sky-500/10 text-sky-300/90'
         : opportunity.funding === 'Partially Funded'
-          ? 'text-violet-300/90 bg-violet-500/10 border-violet-500/20'
+          ? 'border-violet-500/20 bg-violet-500/10 text-violet-300/90'
           : opportunity.funding === 'Stipend'
-            ? 'text-emerald-300/90 bg-emerald-500/10 border-emerald-500/20'
-            : 'text-gold-300/90 bg-gold-500/10 border-gold-500/20';
+            ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300/90'
+            : 'border-gold-500/20 bg-gold-500/10 text-gold-300/90';
 
   const deadlineTone =
     days !== null && days >= 0 && days <= 7
@@ -94,7 +100,7 @@ export function OpportunityCard({
     opportunity.sourceUrl;
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-ink-850/60 p-5 transition-all duration-500 hover:-translate-y-1 hover:border-gold-500/25 hover:bg-ink-800/60 sm:p-6">
+    <article className="group relative flex h-full min-h-[560px] flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-ink-850/60 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-gold-500/25 hover:bg-ink-800/60 sm:p-6">
 
       {/* Featured */}
       {opportunity.featured && (
@@ -105,7 +111,7 @@ export function OpportunityCard({
 
       {/* Category + Funding */}
       <div className="flex items-start justify-between gap-3 pr-1">
-        <span className="text-xs font-medium uppercase tracking-wider text-gold-400/70">
+        <span className="min-w-0 truncate text-xs font-medium uppercase tracking-wider text-gold-400/70">
           {category?.name ?? opportunity.category}
         </span>
 
@@ -117,14 +123,17 @@ export function OpportunityCard({
       </div>
 
       {/* Title */}
-      <h3 className="mt-3 font-display text-lg font-medium leading-snug text-white">
+      <h3 className="mt-3 line-clamp-3 font-display text-lg font-medium leading-snug text-white">
         {opportunity.name}
       </h3>
 
       {/* Organization */}
-      <div className="mt-1 flex items-center gap-1.5 text-sm text-ink-300">
+      <div className="mt-2 flex min-w-0 items-center gap-1.5 text-sm text-ink-300">
         <Building2 className="h-3.5 w-3.5 shrink-0 text-ink-400" />
-        <span>{opportunity.organization}</span>
+
+        <span className="truncate">
+          {opportunity.organization}
+        </span>
       </div>
 
       {/* Match reason */}
@@ -134,8 +143,9 @@ export function OpportunityCard({
         </p>
       )}
 
-      {/* Type */}
-      {(opportunity.type || opportunity.subcategory) && (
+      {/* Type / Subcategory */}
+      {(opportunity.type ||
+        opportunity.subcategory) && (
         <div className="mt-4 flex flex-wrap gap-2">
           {opportunity.type && (
             <span className="rounded-md border border-white/[0.08] bg-white/[0.03] px-2 py-1 text-[11px] text-ink-200">
@@ -152,12 +162,12 @@ export function OpportunityCard({
       )}
 
       {/* Description */}
-      <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-ink-200">
+      <p className="mt-4 line-clamp-4 text-sm leading-relaxed text-ink-200">
         {opportunity.description}
       </p>
 
       {/* Main metadata */}
-      <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
+      <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-4 text-xs">
 
         <Meta
           icon={<MapPin className="h-3.5 w-3.5" />}
@@ -176,17 +186,20 @@ export function OpportunityCard({
         />
 
         <Meta
-          icon={<GraduationCap className="h-3.5 w-3.5" />}
+          icon={
+            <GraduationCap className="h-3.5 w-3.5" />
+          }
           label="Eligibility"
           value={opportunity.eligibility}
         />
 
         <Meta
-          icon={<BadgeDollarSign className="h-3.5 w-3.5" />}
+          icon={
+            <BadgeDollarSign className="h-3.5 w-3.5" />
+          }
           label="Funding"
           value={opportunity.funding}
         />
-
       </dl>
 
       {/* Additional information */}
@@ -198,7 +211,7 @@ export function OpportunityCard({
         opportunity.duration ||
         opportunity.fee ||
         opportunity.award) && (
-        <div className="mt-4 space-y-2 border-t border-white/[0.06] pt-4">
+        <div className="mt-5 space-y-2.5 border-t border-white/[0.06] pt-4">
 
           {/* Grades */}
           {opportunity.grades &&
@@ -223,7 +236,8 @@ export function OpportunityCard({
 
                   {opportunity.grades.length > 4 && (
                     <span className="rounded-md bg-white/[0.04] px-2 py-0.5 text-[10px] text-ink-400">
-                      +{opportunity.grades.length - 4}
+                      +
+                      {opportunity.grades.length - 4}
                     </span>
                   )}
                 </div>
@@ -343,51 +357,51 @@ export function OpportunityCard({
         </div>
       )}
 
-      {/* Days remaining */}
-      {days !== null && days >= 0 && (
-        <p
-          className={`mt-4 text-[11px] ${
-            days <= 7
-              ? 'font-medium text-red-300'
-              : 'text-ink-400'
-          }`}
-        >
-          <Clock className="mr-1 inline h-3 w-3" />
+      {/* Deadline status */}
+      <div className="min-h-[20px]">
+        {days !== null && days >= 0 && (
+          <p
+            className={`mt-4 text-[11px] ${
+              days <= 7
+                ? 'font-medium text-red-300'
+                : 'text-ink-400'
+            }`}
+          >
+            <Clock className="mr-1 inline h-3 w-3" />
 
-          {days === 0
-            ? 'Ends today'
-            : days === 1
-              ? '1 day left'
-              : `${days} days left`}
-        </p>
-      )}
+            {days === 0
+              ? 'Ends today'
+              : days === 1
+                ? '1 day left'
+                : `${days} days left`}
+          </p>
+        )}
 
-      {/* Rolling / TBA */}
-      {opportunity.deadline === 'Rolling' && (
-        <p className="mt-4 text-[11px] text-ink-400">
-          <Clock className="mr-1 inline h-3 w-3" />
-          Applications accepted on a rolling basis
-        </p>
-      )}
+        {opportunity.deadline === 'Rolling' && (
+          <p className="mt-4 text-[11px] text-ink-400">
+            <Clock className="mr-1 inline h-3 w-3" />
+            Applications accepted on a rolling basis
+          </p>
+        )}
 
-      {(opportunity.deadline === 'To be announced' ||
-        opportunity.deadline === 'TBA') && (
-        <p className="mt-4 text-[11px] text-ink-400">
-          <Clock className="mr-1 inline h-3 w-3" />
-          Deadline to be announced
-        </p>
-      )}
+        {(opportunity.deadline === 'To be announced' ||
+          opportunity.deadline === 'TBA') && (
+          <p className="mt-4 text-[11px] text-ink-400">
+            <Clock className="mr-1 inline h-3 w-3" />
+            Deadline to be announced
+          </p>
+        )}
+      </div>
 
       {/* Footer */}
-      <div className="mt-auto flex flex-col gap-4 pt-6">
+      <div className="mt-auto pt-6">
 
         {/* Verification */}
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex min-h-[24px] items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-1.5 text-[11px] text-ink-400">
+            <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-emerald-400/70" />
 
-          <div className="flex items-center gap-1.5 text-[11px] text-ink-400">
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400/70" />
-
-            <span>
+            <span className="truncate">
               {opportunity.status === 'Verified'
                 ? `Verified ${formatDate(
                     opportunity.lastVerified
@@ -397,16 +411,15 @@ export function OpportunityCard({
           </div>
 
           {opportunity.IndiaEligible && (
-            <span className="rounded-full border border-orange-400/10 bg-orange-400/[0.06] px-2 py-0.5 text-[10px] text-orange-200/80">
+            <span className="shrink-0 rounded-full border border-orange-400/10 bg-orange-400/[0.06] px-2 py-0.5 text-[10px] text-orange-200/80">
               India eligible
             </span>
           )}
         </div>
 
         {/* Buttons */}
-        <div className="flex flex-wrap items-center justify-end gap-2">
+        <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
 
-          {/* Official Website */}
           {websiteUrl && (
             <a
               href={websiteUrl}
@@ -419,7 +432,6 @@ export function OpportunityCard({
             </a>
           )}
 
-          {/* Apply */}
           {applyUrl && (
             <a
               href={applyUrl}
@@ -428,10 +440,10 @@ export function OpportunityCard({
               className="group/btn inline-flex items-center gap-1 rounded-lg bg-gold-500 px-3 py-1.5 text-xs font-medium text-ink-950 transition-colors hover:bg-gold-400"
             >
               Apply
+
               <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5" />
             </a>
           )}
-
         </div>
       </div>
     </article>
@@ -457,7 +469,7 @@ function Meta({
       </dt>
 
       <dd
-        className={`mt-0.5 line-clamp-2 ${valueClassName}`}
+        className={`mt-1 line-clamp-2 ${valueClassName}`}
       >
         {value}
       </dd>
