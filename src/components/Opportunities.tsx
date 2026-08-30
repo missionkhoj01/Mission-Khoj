@@ -17,7 +17,12 @@ import type {
 } from '@/types';
 
 const countries = Array.from(
-  new Set(opportunities.map((o) => o.country))
+  new Set(
+    opportunities
+      .filter((o) => o.status !== 'Expired')
+      .map((o) => o.country)
+      .filter(Boolean)
+  )
 ).sort();
 
 const fundingOptions: FundingType[] = [
@@ -99,11 +104,25 @@ export function Opportunities({
   const [showFilters, setShowFilters] = useState(false);
 
   /*
-   * Automatically calculate how many opportunities
-   * belong to each category.
+   * Only active opportunities are shown throughout
+   * this component.
+   */
+  const activeOpportunities = useMemo(
+    () =>
+      opportunities.filter(
+        (opportunity) => opportunity.status !== 'Expired'
+      ),
+    []
+  );
+
+  /*
+   * Category counts.
+   *
+   * Expired opportunities are intentionally excluded so
+   * the numbers match the opportunities users can actually see.
    */
   const categoryCounts = useMemo(() => {
-    return opportunities.reduce<Record<string, number>>(
+    return activeOpportunities.reduce<Record<string, number>>(
       (acc, opportunity) => {
         acc[opportunity.category] =
           (acc[opportunity.category] || 0) + 1;
@@ -112,7 +131,7 @@ export function Opportunities({
       },
       {}
     );
-  }, []);
+  }, [activeOpportunities]);
 
   /*
    * Filter opportunities.
@@ -120,11 +139,7 @@ export function Opportunities({
   const filtered = useMemo(() => {
     const now = new Date();
 
-    return opportunities
-      /*
-       * Never show expired opportunities.
-       */
-      .filter((o) => o.status !== 'Expired')
+    return activeOpportunities
 
       /*
        * Category
@@ -154,27 +169,27 @@ export function Opportunities({
       )
 
       /*
-       * Grade / education level
+       * Grade / education level.
        *
-       * We check both the new grades field and
-       * the old eligibility text so existing
-       * opportunities continue to work.
+       * Checks both the grades array and the
+       * eligibility text for compatibility with
+       * older records.
        */
       .filter((o) => {
         if (grade === 'all') return true;
 
+        const selectedGrade = grade.toLowerCase();
+
         const gradeMatch =
           o.grades?.some(
-            (g) => g.toLowerCase() === grade.toLowerCase()
+            (g) =>
+              g.toLowerCase() === selectedGrade
           ) ?? false;
 
-        const eligibilityMatch = o.eligibility
-          .toLowerCase()
-          .includes(
-            grade
-              .replace('Grade ', 'grade ')
-              .toLowerCase()
-          );
+        const eligibilityMatch =
+          o.eligibility
+            ?.toLowerCase()
+            .includes(selectedGrade) ?? false;
 
         return gradeMatch || eligibilityMatch;
       })
@@ -189,7 +204,7 @@ export function Opportunities({
       )
 
       /*
-       * Provider
+       * Provider type
        */
       .filter((o) =>
         providerType === 'all'
@@ -199,10 +214,6 @@ export function Opportunities({
 
       /*
        * India eligibility
-       *
-       * If an opportunity does not yet have
-       * IndiaEligible defined, we also allow
-       * explicit India country entries.
        */
       .filter((o) => {
         if (!indiaOnly) return true;
@@ -220,7 +231,9 @@ export function Opportunities({
       .filter((o) => {
         if (
           deadline === 'all' ||
-          o.deadline === 'Rolling'
+          o.deadline === 'Rolling' ||
+          o.deadline === 'To be announced' ||
+          o.deadline === 'TBA'
         ) {
           return true;
         }
@@ -236,8 +249,8 @@ export function Opportunities({
           (1000 * 60 * 60 * 24);
 
         /*
-         * Don't include opportunities whose
-         * deadline has already passed.
+         * Do not show already-passed deadlines
+         * when a deadline filter is selected.
          */
         if (diff < 0) {
           return false;
@@ -267,12 +280,12 @@ export function Opportunities({
         const q = query.toLowerCase().trim();
 
         return (
-          o.name.toLowerCase().includes(q) ||
-          o.organization.toLowerCase().includes(q) ||
-          o.description.toLowerCase().includes(q) ||
-          o.eligibility.toLowerCase().includes(q) ||
-          o.country.toLowerCase().includes(q) ||
-          o.category.toLowerCase().includes(q) ||
+          o.name?.toLowerCase().includes(q) ||
+          o.organization?.toLowerCase().includes(q) ||
+          o.description?.toLowerCase().includes(q) ||
+          o.eligibility?.toLowerCase().includes(q) ||
+          o.country?.toLowerCase().includes(q) ||
+          o.category?.toLowerCase().includes(q) ||
           o.type?.toLowerCase().includes(q) ||
           o.subcategory?.toLowerCase().includes(q) ||
           o.location?.toLowerCase().includes(q) ||
@@ -284,12 +297,13 @@ export function Opportunities({
           o.subjects?.some((s) =>
             s.toLowerCase().includes(q)
           ) ||
-          o.tags.some((t) =>
+          o.tags?.some((t) =>
             t.toLowerCase().includes(q)
           )
         );
       });
   }, [
+    activeOpportunities,
     activeCategory,
     country,
     grade,
@@ -316,7 +330,7 @@ export function Opportunities({
     (indiaOnly ? 1 : 0);
 
   /*
-   * Reset everything.
+   * Reset all filters and category.
    */
   const reset = () => {
     setCountry('all');
@@ -383,9 +397,7 @@ export function Opportunities({
                 setActiveCategory('all')
               }
             >
-              All ({opportunities.filter(
-                (o) => o.status !== 'Expired'
-              ).length})
+              All ({activeOpportunities.length})
             </Chip>
 
             {categories.map((c) => (
