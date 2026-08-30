@@ -12,9 +12,21 @@
   body {
     @apply bg-ink-950 text-ink-100 font-sans;
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(193, 154, 78, 0.06), transparent),
-      linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      radial-gradient(
+        ellipse 80% 50% at 50% -10%,
+        rgba(193, 154, 78, 0.06),
+        transparent
+      ),
+      linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.015) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.015) 1px,
+        transparent 1px
+      );
     background-size: 100% 100%, 64px 64px, 64px 64px;
     background-attachment: fixed;
   }
@@ -23,7 +35,9 @@
     @apply bg-gold-500/30 text-white;
   }
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     @apply font-display;
     letter-spacing: -0.02em;
   }
@@ -47,7 +61,12 @@
   }
 
   .text-gradient-gold {
-    background: linear-gradient(135deg, #f5ecd6 0%, #cda85c 50%, #a8813f 100%);
+    background: linear-gradient(
+      135deg,
+      #f5ecd6 0%,
+      #cda85c 50%,
+      #a8813f 100%
+    );
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -56,14 +75,43 @@
   .eyebrow {
     @apply text-xs font-medium uppercase tracking-[0.25em] text-gold-400/80;
   }
+
+  /* Mission Khoj — Founders */
+  .about-founders {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .about-founders p {
+    margin-bottom: 12px;
+  }
+
+  .about-founders strong {
+    color: #f5f5f5;
+  }
+
+  .about-founders a {
+    color: #d4a85c;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .about-founders a:hover {
+    opacity: 0.75;
+    text-decoration: underline;
+  }
 }
 
 @layer utilities {
   .reveal {
     opacity: 0;
     transform: translateY(24px);
-    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   }
+
   .reveal.is-visible {
     opacity: 1;
     transform: translateY(0);
@@ -72,6 +120,7 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
