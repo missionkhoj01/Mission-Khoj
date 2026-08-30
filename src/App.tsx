@@ -20,20 +20,27 @@ function App() {
 
   const handleSelectCategory = (id: CategoryId) => {
     setActiveCategory(id);
+
     // smooth-scroll to opportunities after state set
     requestAnimationFrame(() => {
-      document.getElementById('opportunities')?.scrollIntoView({ behavior: 'smooth' });
+      document
+        .getElementById('opportunities')
+        ?.scrollIntoView({ behavior: 'smooth' });
     });
   };
 
   return (
     <div className="min-h-screen pb-16 lg:pb-0">
       <Navigation />
+
       <main>
         <Hero />
         <Stats />
         <Categories onSelectCategory={handleSelectCategory} />
-        <Opportunities activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
+        <Opportunities
+          activeCategory={activeCategory}
+          setActiveCategory={setActiveCategory}
+        />
         <OpportunityFinder />
         <AskKhoj />
         <Guides />
@@ -42,6 +49,7 @@ function App() {
         <About />
         <InstagramSection />
       </main>
+
       <Footer />
       <StickyCTA />
     </div>
