@@ -129,9 +129,11 @@ export const categories: Category[] = [
   },
 ];
 
-/*
- * Automatically calculate the number of opportunities
- * inside every category.
+/**
+ * Automatically calculate the number of active opportunities
+ * in each category.
+ *
+ * Expired opportunities are excluded.
  */
 export const categoriesWithCounts: Category[] = categories.map((category) => ({
   ...category,
