@@ -3,7 +3,11 @@ import { Menu, X, ArrowRight } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 import { Logo } from '@/components/Logo';
 
-export function Navigation() {
+interface NavigationProps {
+  onNavigate?: (path: string) => void;
+}
+
+export function Navigation({ onNavigate }: NavigationProps) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -21,24 +25,49 @@ export function Navigation() {
     };
   }, [open]);
 
+  const handleNavigate = (href: string) => {
+    if (href.startsWith('/')) {
+      onNavigate?.(href);
+    } else {
+      window.location.href = href;
+    }
+    setOpen(false);
+  };
+
   return (
     <>
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
           scrolled
-            ? 'bg-ink-950/85 backdrop-blur-xl border-b border-white/[0.06]'
-            : 'bg-transparent border-b border-transparent'
+            ? 'bg-ink-950/90 backdrop-blur-xl border-b border-white/[0.06]'
+            : 'bg-ink-950/70 backdrop-blur-md border-b border-white/[0.04]'
         }`}
       >
         <nav className="mx-auto flex max-w-8xl items-center justify-between px-5 py-3.5 sm:px-8">
-          <Logo />
+          <a
+            href="/"
+            onClick={(event) => {
+              if (onNavigate) {
+                event.preventDefault();
+                handleNavigate('/');
+              }
+            }}
+          >
+            <Logo />
+          </a>
 
           <div className="hidden items-center gap-1 lg:flex">
             {siteConfig.nav.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="rounded-lg px-3.5 py-2 text-sm text-ink-200 transition-colors duration-300 hover:text-white hover:bg-white/[0.04]"
+                onClick={(event) => {
+                  if (item.href.startsWith('/') && onNavigate) {
+                    event.preventDefault();
+                    handleNavigate(item.href);
+                  }
+                }}
+                className="rounded-lg px-3.5 py-2 text-sm text-ink-200 transition-colors duration-300 hover:bg-white/[0.04] hover:text-white"
               >
                 {item.label}
               </a>
@@ -47,7 +76,13 @@ export function Navigation() {
 
           <div className="hidden lg:block">
             <a
-              href="#opportunities"
+              href="/opportunities"
+              onClick={(event) => {
+                if (onNavigate) {
+                  event.preventDefault();
+                  handleNavigate('/opportunities');
+                }
+              }}
               className="group inline-flex items-center gap-2 rounded-lg bg-gold-500 px-4 py-2.5 text-sm font-medium text-ink-950 transition-all duration-300 hover:bg-gold-400 hover:shadow-[0_0_28px_-6px_rgba(193,154,78,0.6)]"
             >
               Find an Opportunity
@@ -65,7 +100,6 @@ export function Navigation() {
         </nav>
       </header>
 
-      {/* Mobile drawer */}
       <div
         className={`fixed inset-0 z-[60] lg:hidden ${open ? '' : 'pointer-events-none'}`}
         aria-hidden={!open}
@@ -82,7 +116,17 @@ export function Navigation() {
           }`}
         >
           <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-4">
-            <Logo onClick={() => setOpen(false)} />
+            <a
+              href="/"
+              onClick={(event) => {
+                if (onNavigate) {
+                  event.preventDefault();
+                  handleNavigate('/');
+                }
+              }}
+            >
+              <Logo />
+            </a>
             <button
               className="flex h-10 w-10 items-center justify-center rounded-lg text-ink-100 hover:bg-white/[0.06]"
               onClick={() => setOpen(false)}
@@ -96,15 +140,23 @@ export function Navigation() {
               <a
                 key={item.href}
                 href={item.href}
-                onClick={() => setOpen(false)}
+                onClick={(event) => {
+                  if (item.href.startsWith('/') && onNavigate) {
+                    event.preventDefault();
+                  }
+                  handleNavigate(item.href);
+                }}
                 className="rounded-lg px-4 py-3.5 text-[15px] text-ink-100 transition-colors hover:bg-white/[0.05] hover:text-gold-300"
               >
                 {item.label}
               </a>
             ))}
             <a
-              href="#opportunities"
-              onClick={() => setOpen(false)}
+              href="/opportunities"
+              onClick={(event) => {
+                if (onNavigate) event.preventDefault();
+                handleNavigate('/opportunities');
+              }}
               className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-gold-500 px-5 py-3.5 text-sm font-medium text-ink-950"
             >
               Find an Opportunity
