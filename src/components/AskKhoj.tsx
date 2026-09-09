@@ -1,7 +1,9 @@
-import { useState, type FormEvent } from 'react';
-import { Send, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { useState, type FormEvent, type ReactNode } from 'react';
+import { Send, CheckCircle2, ShieldAlert, AlertCircle } from 'lucide-react';
 import { Reveal } from '@/components/Reveal';
 import { Button } from '@/components/Button';
+
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mvkooyry';
 
 const grades = ['Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12', 'Undergraduate', 'Other'];
 const interestOptions = ['STEM', 'Mathematics', 'Computer Science', 'AI', 'Research', 'Business', 'Economics', 'Writing', 'Social Impact', 'Arts', 'Other'];
@@ -26,11 +28,49 @@ const empty: AskForm = {
 export function AskKhoj() {
   const [form, setForm] = useState<AskForm>(empty);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Structured for later DB/email connection — currently local only.
-    setSubmitted(true);
+    setSubmitting(true);
+    setError('');
+
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name || 'Not provided',
+          email: form.email,
+          grade: form.grade || 'Not provided',
+          country: form.country || 'Not provided',
+          interests: form.interests.length ? form.interests.join(', ') : 'Not provided',
+          lookingFor: form.lookingFor || 'Not provided',
+          deadlinePreference: form.deadlinePref || 'Not provided',
+          additionalInformation: form.additional || 'Not provided',
+          _subject: 'New Ask Khoj request',
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        const message = Array.isArray(data?.errors)
+          ? data.errors.map((item: { message?: string }) => item.message).filter(Boolean).join(' ')
+          : '';
+        throw new Error(message || 'Formspree could not receive the request. Please try again.');
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const toggleInterest = (v: string) =>
@@ -53,7 +93,7 @@ export function AskKhoj() {
                 The Khoj team will review it and get back to you.
               </p>
               <button
-                onClick={() => { setForm(empty); setSubmitted(false); }}
+                onClick={() => { setForm(empty); setSubmitted(false); setError(''); }}
                 className="mt-8 inline-flex items-center gap-2 rounded-lg border border-white/15 px-5 py-2.5 text-sm text-ink-100 transition-colors hover:border-gold-500/40 hover:text-gold-300"
               >
                 Submit another request
@@ -85,6 +125,7 @@ export function AskKhoj() {
               <Field label="Name (optional)">
                 <input
                   type="text"
+                  name="name"
                   value={form.name}
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                   className={inputCls}
@@ -94,6 +135,7 @@ export function AskKhoj() {
               <Field label="Email" required>
                 <input
                   type="email"
+                  name="email"
                   required
                   value={form.email}
                   onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
@@ -105,10 +147,10 @@ export function AskKhoj() {
 
             <div className="grid gap-5 sm:grid-cols-2">
               <Field label="Class / Grade">
-                <Select value={form.grade} onChange={(v) => setForm((f) => ({ ...f, grade: v }))} options={['', ...grades]} />
+                <Select name="grade" value={form.grade} onChange={(v) => setForm((f) => ({ ...f, grade: v }))} options={['', ...grades]} />
               </Field>
               <Field label="Country">
-                <Select value={form.country} onChange={(v) => setForm((f) => ({ ...f, country: v }))} options={['', ...countries]} />
+                <Select name="country" value={form.country} onChange={(v) => setForm((f) => ({ ...f, country: v }))} options={['', ...countries]} />
               </Field>
             </div>
 
@@ -133,6 +175,7 @@ export function AskKhoj() {
 
             <Field label="What are you looking for?">
               <textarea
+                name="lookingFor"
                 value={form.lookingFor}
                 onChange={(e) => setForm((f) => ({ ...f, lookingFor: e.target.value }))}
                 rows={3}
@@ -142,11 +185,12 @@ export function AskKhoj() {
             </Field>
 
             <Field label="Deadline preference">
-              <Select value={form.deadlinePref} onChange={(v) => setForm((f) => ({ ...f, deadlinePref: v }))} options={['', ...deadlinePrefs]} />
+              <Select name="deadlinePreference" value={form.deadlinePref} onChange={(v) => setForm((f) => ({ ...f, deadlinePref: v }))} options={['', ...deadlinePrefs]} />
             </Field>
 
             <Field label="Additional information">
               <textarea
+                name="additionalInformation"
                 value={form.additional}
                 onChange={(e) => setForm((f) => ({ ...f, additional: e.target.value }))}
                 rows={2}
@@ -162,8 +206,16 @@ export function AskKhoj() {
               </p>
             </div>
 
-            <Button type="submit" size="lg" className="w-full">
-              <Send className="h-4 w-4" /> Send Request
+            {error && (
+              <div role="alert" className="flex items-start gap-2 rounded-lg border border-red-400/20 bg-red-400/[0.05] p-3 text-sm text-red-200">
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <Button type="submit" size="lg" className="w-full" disabled={submitting}>
+              <Send className="h-4 w-4" />
+              {submitting ? 'Sending…' : 'Send Request'}
             </Button>
           </form>
         </Reveal>
@@ -175,7 +227,7 @@ export function AskKhoj() {
 const inputCls =
   'w-full rounded-lg border border-white/[0.08] bg-ink-800/60 px-3.5 py-2.5 text-sm text-white placeholder:text-ink-400 transition-colors focus:border-gold-500/40 focus:outline-none focus:ring-1 focus:ring-gold-500/25';
 
-function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
+function Field({ label, required, children }: { label: string; required?: boolean; children: ReactNode }) {
   return (
     <label className="flex flex-col gap-1.5">
       <span className="text-sm text-ink-200">
@@ -186,9 +238,10 @@ function Field({ label, required, children }: { label: string; required?: boolea
   );
 }
 
-function Select({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: string[] }) {
+function Select({ name, value, onChange, options }: { name: string; value: string; onChange: (v: string) => void; options: string[] }) {
   return (
     <select
+      name={name}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       className={inputCls}
