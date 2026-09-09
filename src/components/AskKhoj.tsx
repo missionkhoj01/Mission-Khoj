@@ -37,23 +37,25 @@ export function AskKhoj() {
     setError('');
 
     try {
+      // FormData avoids a JSON preflight and matches Formspree's browser AJAX pattern.
+      const body = new FormData();
+      body.append('name', form.name || 'Not provided');
+      body.append('email', form.email);
+      body.append('grade', form.grade || 'Not provided');
+      body.append('country', form.country || 'Not provided');
+      body.append('interests', form.interests.length ? form.interests.join(', ') : 'Not provided');
+      body.append('lookingFor', form.lookingFor || 'Not provided');
+      body.append('deadlinePreference', form.deadlinePref || 'Not provided');
+      body.append('additionalInformation', form.additional || 'Not provided');
+      body.append('_subject', 'New Ask Khoj request');
+      body.append('_source', 'Mission Khoj website');
+
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name: form.name || 'Not provided',
-          email: form.email,
-          grade: form.grade || 'Not provided',
-          country: form.country || 'Not provided',
-          interests: form.interests.length ? form.interests.join(', ') : 'Not provided',
-          lookingFor: form.lookingFor || 'Not provided',
-          deadlinePreference: form.deadlinePref || 'Not provided',
-          additionalInformation: form.additional || 'Not provided',
-          _subject: 'New Ask Khoj request',
-        }),
+        body,
       });
 
       const data = await response.json().catch(() => ({}));
@@ -62,7 +64,7 @@ export function AskKhoj() {
         const message = Array.isArray(data?.errors)
           ? data.errors.map((item: { message?: string }) => item.message).filter(Boolean).join(' ')
           : '';
-        throw new Error(message || 'Formspree could not receive the request. Please try again.');
+        throw new Error(message || `Formspree could not receive the request (HTTP ${response.status}).`);
       }
 
       setSubmitted(true);
@@ -120,7 +122,13 @@ export function AskKhoj() {
         </Reveal>
 
         <Reveal className="mt-10">
-          <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-white/[0.07] bg-ink-850/60 p-6 sm:p-8">
+          <form
+            id="ask-khoj-form"
+            action={FORMSPREE_ENDPOINT}
+            method="POST"
+            onSubmit={handleSubmit}
+            className="space-y-5 rounded-2xl border border-white/[0.07] bg-ink-850/60 p-6 sm:p-8"
+          >
             <div className="grid gap-5 sm:grid-cols-2">
               <Field label="Name (optional)">
                 <input
