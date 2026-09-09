@@ -19,45 +19,15 @@ export const siteConfig = {
 
   foundedYear: 2026,
 
-  /*
-   * Stats are calculated dynamically from
-   * src/data/opportunities.ts
-   *
-   * Do NOT put fixed opportunity numbers here.
-   */
-
   stats: [],
 
   nav: [
-    {
-      label: 'Opportunities',
-      href: '#opportunities',
-    },
-
-    {
-      label: 'Opportunity Finder',
-      href: '#finder',
-    },
-
-    {
-      label: 'Ask Khoj',
-      href: '#ask',
-    },
-
-    {
-      label: 'Guides',
-      href: '#guides',
-    },
-
-    {
-      label: 'Stories',
-      href: '#stories',
-    },
-
-    {
-      label: 'About',
-      href: '#about',
-    },
+    { label: 'Opportunities', href: '/opportunities' },
+    { label: 'Opportunity Finder', href: '/finder' },
+    { label: 'Ask Khoj', href: '/ask' },
+    { label: 'Guides', href: '/guides' },
+    { label: 'Stories', href: '/stories' },
+    { label: 'About', href: '/about' },
   ],
 };
 
