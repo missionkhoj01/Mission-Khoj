@@ -13,8 +13,6 @@ import { About } from '@/components/About';
 import { InstagramSection } from '@/components/InstagramSection';
 import { Footer } from '@/components/Footer';
 
-import type { CategoryId } from '@/types';
-
 type Route = 'home' | 'opportunities' | 'finder' | 'ask' | 'guides' | 'stories' | 'about';
 
 function getRoute(): Route {
@@ -32,7 +30,6 @@ function getRoute(): Route {
 
 function App() {
   const [route, setRoute] = useState<Route>(getRoute);
-  const [activeCategory, setActiveCategory] = useState<CategoryId | 'all'>('all');
 
   useEffect(() => {
     const onPopState = () => setRoute(getRoute());
@@ -46,9 +43,8 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSelectCategory = (id: CategoryId) => {
-    setActiveCategory(id);
-    navigate('/opportunities');
+  const handleSelectCategory = (id: string) => {
+    navigate(`/opportunities?category=${encodeURIComponent(id)}`);
   };
 
   const renderHome = () => (
